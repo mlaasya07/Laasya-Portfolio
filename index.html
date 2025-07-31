@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laasya | Portfolio</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet" />
+  <link rel="icon" href="profilepicture.jpg"/>
+  <link rel="stylesheet" href="https://unpkg.com/github-calendar@latest/dist/github-calendar-responsive.css" />
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/a2e0e6d47e.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+<!-- STYLES -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+
+  body {
+    font-family: 'Roboto Mono', monospace;
+    background-color: #fdfdfd;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 9999;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header h1 { font-size: 1.5rem; }
+
+  nav { z-index: 100; position: relative; }
+  nav a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  nav a:hover { color: #0077ff; }
+
+  #home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px); /* ensures footer stays at bottom */
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .dropdown { position: relative; display: inline-block; }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+  }
+  .dropdown-content a {
+    color: #333; padding: 12px 16px; text-decoration: none; display: block;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+  .dropdown-content a:hover { background-color: #f1f1f1; }
+  body.dark .dropdown-content { background-color: #1e1e1e; }
+  body.dark .dropdown-content a { color: #f5427e; }
+  body.dark .dropdown-content a:hover { background-color: #333; }
+
+  section { display: none; padding: 4rem 2rem; max-width: 900px; margin: auto; }
+  section.active { display: block; }
+
+  h2 { font-size: 2rem; margin-bottom: 1rem; color: #111; }
+  p, ul { font-size: 1.1rem; line-height: 1.6; color: #444; }
+  ul li { margin-bottom: 0.5rem; }
+  a.site-link { color: #0077ff; text-decoration: none; }
+  a.site-link:hover { text-decoration: underline; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    color: #000 !important; /* Ensure footer text is always black */
+    background: #f0f0f0;
+  }
+
+  footer a {
+  color: inherit !important; /* Make links inherit footer color */
+  text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  footer a.no-underline:hover {
+    text-decoration: none !important;
+  }
+  .icon-link { color: #0077ff; margin-right: 0.8rem; text-decoration: none; }
+  .icon-link i { margin-right: 0.3rem; }
+  .icon-link:hover { text-decoration: underline; }
+
+  .game-card {
+    background: #f9f9f9;
+    border: 1px solid #f5427e;
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    margin: 2.5rem auto;
+    box-shadow: 0 0 20px #f5427e  ;
+    max-width: 1000px;
+    width: 95%;
+    transition: transform 0.3s ease;
+  }
+  .game-card:hover { transform: scale(1.05); }
+  .game-card h3 { color: #f5427e; font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+  .tech-badge {
+    background-color: rgba(52,152,219,0.2);
+    color: #f5427e;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin: 0.2rem;
+    display: inline-block;
+  }
+
+  .screenshot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .screenshot-grid img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #4db8ff;
+  }
+
+  .game-links a {
+    margin-right: 1rem;
+    color: #f5427e;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .game-links a:hover { color: #f5427e; text-decoration: underline; }
+
+  .profile-image {
+    width: 200px; height: 200px; border-radius: 50%; overflow: hidden;
+    margin-bottom: 1rem; box-shadow: 0 0 20px #f5427e, 0 0 40px #f5427e;
+    transition: transform 0.4s ease; cursor: pointer;
+  }
+  .profile-image img {
+    width: 100%; height: 100%; object-fit: cover; transform: scale(1);
+    transition: transform 0.4s ease;
+  }
+  .profile-image:hover img { transform: scale(1.1) rotate(7deg); }
+
+  .floating-icons {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 1; pointer-events: none;
+  }
+
+  .float { position: absolute; font-size: 2rem; opacity: 0.8; }
+
+  .float-1 { top: 20%; left: 15%; animation: floaty 6s infinite; }
+  .float-2 { top: 50%; left: 70%; animation: floaty2 6s infinite 2s; }
+  .float-3 { top: 80%; left: 40%; animation: rotatey 6s infinite 2s; }
+  .float-4 { top: 10%; left: 80%; animation: floaty 8s infinite 2s; }
+  .float-5 { top: 30%; left: 10%; animation: floaty2 7s infinite 2s; }
+  .float-6 { top: 60%; left: 25%; animation: rotatey 9s infinite 2s; }
+  .float-7 { top: 40%; left: 85%; animation: floaty 10s infinite 2s; }
+  .float-8 { top: 70%; left: 60%; animation: floaty2 6s infinite 2s; }
+  .float-9 { top: 50%; left: 35%; animation: rotatey 7s infinite 2s; }
+  .float-10 { top: 15%; left: 50%; animation: floaty2 8s infinite 2s; }
+  .float-11 { top: 85%; left: 20%; animation: floaty 9s infinite 2s; }
+  .float-12 { top: 25%; left: 65%; animation: rotatey 6s infinite 2s; }
+
+  @keyframes floaty { 0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);} }
+  @keyframes floaty2 { 0%,100%{transform:translateX(0);}50%{transform:translateX(15px);} }
+  @keyframes rotatey {0%{transform:rotate(0);}50%{transform:rotate(10deg);}100%{transform:rotate(0);}}
+
+  body.dark { background-color:#121212; color:#e0e0e0; }
+  body.dark header { background-color:#1e1e1e; }
+  body.dark nav a { color:#f5427e; }
+  body.dark nav a:hover { color:#ff82ac; }
+  body.dark footer { background:#1e1e1e !important; color:#ccc; }
+  body.dark .site-link, body.dark .icon-link { color:#f5427e; }
+  body.dark .game-card { background:#1e1e1e; border-color:#f5427e; }
+  body.dark h1, body.dark h2, body.dark h3, body.dark p, body.dark ul, body.dark li { color:#f5427e!important; }
+
+  body, h1, h2, h3, p, nav a, li { transition: color 0.3s ease, background-color 0.3s ease; }
+
+  .glitch { animation: glitchAnim 0.3s infinite; }
+  @keyframes glitchAnim {0%{transform:translate(1px,0);}25%{transform:translate(-2px,-2px);}50%{transform:translate(1px,2px);}75%{transform:translate(-1px,1px);}100%{transform:translate(0,0);}}
+
+  #orb {
+    position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+    background: radial-gradient(circle, #bf0543, #ff82ac);
+    border-radius: 50%; z-index: 9999; pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s ease-out, background 0.3s ease;
+    box-shadow: 0 0 10px #b32d59, 0 0 30px #c74973;
+  }
+
+  body.dark #orb { background: radial-gradient(circle, #f5427e, #ff82ac); box-shadow: 0 0 10px #f5427e, 0 0 30px #f5427e; }
+  body.offline #orb { background: radial-gradient(circle, #ff4d4d, #8b0000); box-shadow: 0 0 15px #ff4d4d, 0 0 40px #8b0000; }
+
+  #offline-toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: #8b0000; color: #fff; padding: 12px 20px; border-radius: 8px;
+    font-size: 0.95rem; z-index: 99999; opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  #offline-toast.show { opacity: 1; }
+
+  @media screen and (max-width: 768px) {
+    header { flex-direction: column; position: fixed; width: 100%; top: 0; left: 0; align-items: flex-start; gap: 1rem; }
+    nav a { display: inline-block; margin: 0.5rem 1rem 0.5rem 0; }
+    .profile-image { width: 150px; height: 150px; }
+    .game-card { padding: 1.5rem; margin: 1.5rem auto; }
+    .screenshot-grid { grid-template-columns: 1fr !important; }
+    h2 { font-size: 1.7rem; }
+    p, ul li { font-size: 1rem; }
+    footer { padding: 1.5rem 1rem; }
+    .calendar { overflow-x: auto; }
+  }
+
+  @media screen and (max-width: 480px) {
+    header { padding: 0.7rem 1rem; }
+    header h1 { font-size: 1.2rem; }
+    nav a { font-size: 0.9rem; }
+    .profile-image { width: 120px; height: 120px; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; }
+    p, ul li { font-size: 0.9rem; line-height: 1.4; }
+    .game-card { padding: 1rem; margin: 1rem auto; text-align: center; }
+    .screenshot-grid img { max-height: 200px; object-fit: cover; }
+    .dropdown-content { min-width: 140px; right: 0; left: auto; }
+    .dropdown-content a { font-size: 0.9rem; }
+    footer p { font-size: 0.8rem; }
+    .float, #orb { display: none; }
+    .calendar { overflow-x: auto; padding-bottom: 1rem; }
+  }
+  .resume-hero { position:relative; width:100%; height:80vh; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#000; }
+  .resume-hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; filter:brightness(0.8) contrast(1.1) saturate(1.2); transition:transform 0.5s; }
+  .resume-hero:hover img { transform:scale(1.611); }
+  .resume-hero .hero-content { position:relative; z-index:2; text-align:center; color:#fff; padding:0 1rem; }
+  .resume-hero .hero-content h1 { font-size:3rem; margin-bottom:1rem; }
+  .resume-hero .hero-content p { font-size:1.3rem; max-width:800px; margin:0 auto; }
+  section.resume-section { padding:4rem 2rem; max-width:1000px; margin:auto; }
+  section.resume-section h2 { font-size:2.5rem; text-align:center; margin-bottom:2rem; }
+  .skills-content .progress { margin-bottom:1rem; }
+  .progress-bar-wrap { background:#eee; border-radius:8px; overflow:hidden; }
+  .progress-bar { height:10px; background:#f5427e; }
+
+  .typed {font-size: 1.6rem; /* Change to your preferred size */ font-weight: 0.5rem; /* optional, if you want it bolder */ }
+  .typed-cursor {font-size: 2rem; /* match your .typed size */}
+
+/* GLOBAL RESET FOR TEXT WRAPPING */
+#myresume * {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* SECTION WRAPPER */
+#myresume {
+  padding: 1rem;
+  max-width: 70%;
+  overflow-x: hidden;
+}
+
+/* HEADERS AND PARAGRAPHS */
+#myresume h1,
+#myresume h2 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-left: 0.5rem;
+  margin-top: 1rem;
+}
+
+#myresume p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+
+}
+
+/* CONTACT SECTION FIX */
+.resume-section {
+  padding: 1rem;
+}
+
+/* SKILLS BAR RESPONSIVE FIX */
+.skills-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.progress {
+  width: 100%;
+}
+
+.progress-bar-wrap {
+  width: 90%;
+  background: #eee;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #f5427e;
+  transition: width 0.5s ease;
+}
+
+/* HERO IMAGE RESPONSIVE FIX */
+.resume-hero img {
+  width: 70%;
+  max-width: 300px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 0%;
+  box-sizing: border-box;
+}
+
+/* HERO TEXT CENTERING */
+.hero-content {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* MEDIA QUERY FOR SMALL SCREENS */
+@media (max-width: 768px) {
+  #myresume {
+    padding: 0.5rem;
+  }
+
+  #myresume h1 {
+    font-size: 1.4rem;
+  }
+
+  #myresume h2 {
+    font-size: 1.2rem;
+  }
+
+  #myresume p {
+    font-size: 0.95rem;
+  }
+}
+  
+.resume-divider {
+  border: none;
+  border-top: 2px dashed #f5427e;
+  margin: 2rem auto;
+  max-width: 90%;
+}
+
+
+.card-carousel {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 2rem 0;
+}
+
+.card-main {
+  flex: 0 0 auto;
+  width: 400px;
+  height: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  scroll-snap-align: start;
+  background: #000;
+  transition: transform 0.4s ease;
+}
+
+.card-main:hover {
+  transform: scale(1.05);
+}
+
+.image {
+  position: relative;
+  width: 100%;
+  height: 60%;
+  overflow: hidden;
+}
+
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s ease;
+}
+
+.card-main:hover img {
+  opacity: 0.7;
+}
+
+.icons {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  gap: 0.7rem;
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 10;
+}
+
+.icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;               /* Smaller icon size */
+  background: rgba(0, 0, 0, 0.6);  /* Dark circle bg */
+  border-radius: 50%;
+  width: 36px;                     /* fixed size */
+  height: 36px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.icons a:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.more-details {
+  position: absolute;
+  bottom: 5rem;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  background: #f5427e;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.4s ease;
+  font-size: 1rem;
+  z-index: 10;
+}
+
+.card-main:hover .icons {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.card-main:hover .more-details {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.card-cont {
+  padding: 1.2rem;
+  text-align: center;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-cont h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.6rem;
+  color: #f5427e;
+}
+
+.card-cont p {
+  font-size: 1.1rem;
+  color: #f5427e;
+}
+
+.category {
+  margin-top: 0rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: #f5427e;
+  font-weight: 500;
+}
+
+
+/* === FINAL MOBILE FIX FOR RESUME SECTION === */
+@media screen and (max-width: 400px) {
+  .resume-hero {
+    height: 60vh;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .resume-hero img {
+    object-position: center top;
+    object-fit: cover;
+  }
+
+  .resume-hero .hero-content h1 {
+    font-size: 2rem;
+    size: 1rem;
+  }
+
+  .resume-hero .hero-content p {
+    font-size: 0.5rem;
+    padding: 0 1rem;
+  }
+
+  section.resume-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .card-carousel {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100vw;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .card-main {
+    width: 280px;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .card-cont h2 {
+    font-size: 1.2rem;
+  }
+
+  .card-cont p {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .resume-hero {
+    height: 50vh;
+  }
+
+  .resume-hero .hero-content h1 {
+    font-size: 1rem;
+  }
+
+  .card-main {
+    width: 240px;
+  }
+
+  .card-cont p {
+    font-size: 0.7rem;
+  }
+
+  .more-details {
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .resume-section {
+    padding: 2rem 1rem !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .resume-section p,
+  .resume-section h2 {
+    word-wrap: break-word;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+
+  .resume-divider {
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .resume-section p,
+  .resume-section h2 {
+    font-size: 0.95rem;
+  }
+
+  .resume-hero .hero-content h1 {
+    font-size: 1.4rem;
+  }
+}
+
+
+
+</style>
+<!-- STYLES -->
+
+</head>
+<body>
+    <div id="orb"></div>
+    <div id="offline-toast">“Signal lost. But memories remain.”</div>
+    <div class="floating-icons" id="emojiWrapper">
+    <span class="float float-1">🌸</span>
+    <span class="float float-2">✨</span>
+    <span class="float float-3">💌</span>
+    <span class="float float-4">🐈</span>
+    <span class="float float-5">🐳</span>
+    <span class="float float-6">🐚</span>
+    <span class="float float-7">🦢</span>
+    <span class="float float-8">🦋</span>
+    <span class="float float-9">🎀</span>
+    <span class="float float-10">🥇</span>
+    <span class="float float-11">🎮</span>
+    <span class="float float-12">♦️</span>
+    </div>
+
+  <header>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <h1>Laasya</h1>
+      <button id="themeToggle" style="background: none; border: none; font-size: 1.3rem; cursor: pointer;">🌙</button>
+    </div>
+    <nav>
+      <a onclick="showSection('home')">Home</a>
+      <a onclick="showSection('about')">About Me</a>
+      <a onclick="showSection('myresume')">Resume</a>
+      <div class="dropdown">
+  <a class="dropbtn">DevTrails ▾</a>
+  <div class="dropdown-content">
+    <a onclick="showSection('mywebsites')">myWebsites</a>
+    <a onclick="showSection('mygames')">myGames</a>
+    <a onclick="showSection('bitverse')">BitVerse</a>
+    <a onclick="showSection('hackathons')">Hackathons</a>
+  </div>
+</div>
+      <a onclick="showSection('contact')">Contact</a>
+    </nav>
+  </header>
+
+  <section id="home" class="active">
+    <div class="profile-image"><img src="profilepicture.jpg" alt="Laasya" /></div>
+    <h2>Hello, I'm Laasya</h2>
+  <p>
+    <span class="typed" data-typed-items=" ♡ Writer ♡, ♡ Developer ♡, ♡ Game Maker ♡"></span>
+  </p>
+  </section>
+
+  <section id="about">
+    <h2 style="text-align:center; font-size: 2.5rem; color: #f5427e; margin-bottom: 2rem;">About Me</h2>
+    <p>-I’m a student developer and creative technologist who loves building quirky, meaningful, and sometimes delightfully chaotic web projects.</p>
+    <p>-From real-time win probability apps to emotion-driven journaling tools and educational RPGs, I’m always blending logic with storytelling.</p>
+    <p>-I built projects like Gibberish Oracle, Sophist, Closetly, Sealya, Velora, and the learning sandbox Rooted Realms.</p>
+    <p>-My work leans into playful UI, interactive features, and experiences that make people think or smile.</p>
+    <p>-I enjoy working with static sites, animation, and designing interfaces that feel intuitive and alive.</p>
+    <p>-I’m especially drawn to ideas that mix creativity with code — the stranger, the better.</p>
+    <p>-At the end of the day, I build things that I’d want to use, explore, or get lost inside.</p>
+  </section>
+
+
+
+<!-- RESUME SECTION -->
+  <section id="myresume">
+    <div class="resume-hero" data-aos="fade-in">
+      <img src="assets/profile-pic.jpg" alt="Resume Hero">
+      <div class="hero-content">
+        <h1>My Resume</h1>
+      </div>
+    </div>
+<hr class="resume-divider">
+    <div class="resume-section" data-aos="fade-up">
+      <h2>Contact Me</h2>
+      <p><strong>Name:</strong> Laasya</p>
+      <p><strong>Profile:</strong> Student Developer & Creative Technologist</p>
+      <p><strong>Email:</strong> mlaasy16@gmail.com</p>
+      <p><strong>Phone:</strong> <a href="tel:+918008564384">+91 8008564384</a></p>
+<hr class="resume-divider">
+      <h2>About Me</h2>
+    <p>-Hi! I’m Laasya, a student developer and creative technologist obsessed with building quirky, meaningful, and sometimes delightfully chaotic projects.</p>
+    <p>-From emotion-driven journaling tools to educational RPGs, I blend logic with storytelling to make code feel alive.</p>
+    <p>-I’ve crafted projects like <strong>Gibberish Oracle</strong> (where nonsense becomes wisdom), <strong>Sophist</strong> (an AI philosopher who debates you), and <strong>Rooted Realms</strong> (an RPG that teaches coding, botany, and more).</p>
+    <p>-Each idea I pursue is driven by a love for playful UI, interactive features, and experiences that make people think, smile, or both.</p>
+    <p>-Whether I’m designing whimsical websites or exploring creative code concepts, I believe tech should surprise and delight.</p>
+    <p>-My mission? Build things I’d love to use myself — spaces where curiosity thrives and weirdness is celebrated.</p>
+    </div>
+<hr class="resume-divider">
+    <div class="resume-section" data-aos="fade-up" data-aos-delay="100">
+      <h2>Skills</h2>
+      <div class="skills-content">
+        <div class="progress">
+          <span class="skill">Python; C; Java <i class="val">95%</i></span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:95%"></div></div>
+        </div>
+        <div class="progress">
+          <span class="skill">H-C-J <i class="val">90%</i></span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:90%"></div></div>
+        </div>
+        <div class="progress">
+          <span class="skill">TailwindCSS <i class="val">85%</i></span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:85%"></div></div>
+        </div>
+        <div class="progress">
+          <span class="skill">Node.js, React.js <i class="val">75%</i></span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:75%"></div></div>
+        </div>
+        <div class="progress">
+          <span class="skill">MySQL <i class="val">70%</i></span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:70%"></div></div>
+        </div>
+         <div class="progress">
+          <span class="skill">Git, GitHub, npm, VS Code <i class="val">65%</i></span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:65%"></div></div>
+        </div>
+      </div>
+    </div>
+<hr class="resume-divider">
+    <div class="card-carousel">
+<div class="card-carousel">
+
+  <!-- Gibberish Oracle -->
+  <div class="card-main">
+    <div class="image">
+      <img src="gibberishdesktop.jpg" alt="Gibberish Oracle"/>
+      <div class="icons">
+        <a href="https://github.com/mlaasya07/Gibberish-Oracle" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://gibberishoracle.netlify.app" target="_blank">
+          <i class="fas fa-link"></i>
+        </a>
+      </div>
+      <a href="https://github.com/mlaasya07/Gibberish-Oracle/blob/main/README.md" class="more-details" target="_blank">More Details</a>
+    </div>
+    <div class="card-cont">
+      <h2>Gibberish Oracle</h2>
+      <p>Type nonsense and receive enlightenment.</p><div class="category">Game</div>
+    </div>
+  </div>
+
+    <!-- Sophist -->
+  <div class="card-main">
+    <div class="image">
+      <img src="sophistdesktop.jpg" alt="Sophist"/>
+      <div class="icons">
+        <a href="https://github.com/mlaasya07/Sophist" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://sophisttheartofmanipulation.netlify.app" target="_blank">
+          <i class="fas fa-link"></i>
+        </a>
+      </div>
+      <a href="https://github.com/mlaasya07/Sophist" class="more-details" target="_blank">More Details</a>
+    </div>
+    <div class="card-cont">
+      <h2>Sophist</h2>
+      <p>Explore the art of manipulation interactively.</p> <div class="category">Interactive</div>
+    </div>
+  </div>
+
+    <!-- Sealya -->
+  <div class="card-main">
+    <div class="image">
+      <img src="Sealyadesktop.png" alt="Sealya"/>
+      <div class="icons">
+        <a href="https://github.com/mlaasya07/Sealya" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fas fa-link"></i>
+        </a>
+      </div>
+      <a href="https://github.com/mlaasya07/Sealya" class="more-details" target="_blank">More Details</a>
+    </div>
+    <div class="card-cont">
+      <h2>Sealya</h2>
+      <p>Unsent letters and time capsules platform.</p><div class="category">Web App</div>
+    </div>
+  </div>
+
+  <!-- SafeWatch -->
+  <div class="card-main">
+    <div class="image">
+      <img src="safewatch.jpg" alt="SafeWatch-not online yet"/>
+      <div class="icons">
+        <a href="https://github.com/mlaasya07/SafeWatch" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fas fa-link"></i>
+        </a>
+      </div>
+      <a href="https://github.com/mlaasya07/SafeWatch" class="more-details" target="_blank">More Details</a>
+    </div>
+    <div class="card-cont">
+      <h2>SafeWatch</h2>
+      <p>Scans videos for vulgarity or violence.</p><div class="category">Detection Tool</div>
+    </div>
+  </div>
+
+  <!-- SheNotes -->
+  <div class="card-main">
+    <div class="image">
+      <img src="shenotes.jpg" alt="SheNotes-not online yet"/>
+      <div class="icons">
+        <a href="https://github.com/mlaasya07/SheNotes" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fas fa-link"></i>
+        </a>
+      </div>
+      <a href="https://github.com/mlaasya07/SheNotes" class="more-details" target="_blank">More Details</a>
+    </div>
+    <div class="card-cont">
+      <h2>SheNotes</h2>
+      <p>Notes app with a hidden menstrual tracker.</p><div class="category">Utility App</div>
+    </div>
+  </div>
+
+  <!-- Rooted Realms -->
+  <div class="card-main">
+    <div class="image">
+      <img src="images/rootedrealms.jpg" alt="Rooted Realms - not online yet"/>
+      <div class="icons">
+        <a href="https://github.com/mlaasya07/Rooted-Realms" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fas fa-link"></i>
+        </a>
+      </div>
+      <a href="https://github.com/mlaasya07/Rooted-Realms" class="more-details" target="_blank">More Details</a>
+    </div>
+    <div class="card-cont">
+      <h2>Rooted Realms</h2>
+      <p>RPG platform teaching coding, botany, and more.</p>
+      <div class="category">Educational Game</div>
+    </div>
+  </div>
+
+</div>
+  <!-- Add more .card-main elements for other projects -->
+</div>
+
+    <hr class="resume-divider">
+
+    <div class="resume-section" data-aos="fade-up" data-aos-delay="200">
+      <h2>Download Resume</h2>
+      <p>Check out my resume for a detailed look at my skills, projects, and experiences.</p>
+      <p><a class="site-link" href="files/MyResume.pdf" target="_blank">-> Download Resume (PDF)</a></p>
+    </div>
+  </section>
+
+
+  <section id="mywebsites">
+    <h2 style="text-align:center">•Websites•</h2>
+    <ul>
+      <li><a class="site-link" href="https://aboutme-laasya.carrd.co/" target="_blank">About Me [previous version]</a></li>
+      <li><a class="site-link" href="https://gibberishoracle.netlify.app/" target="_blank">Gibberish Oracle</a></li>
+      <li><a class="site-link" href="https://sophisttheartofmanipulation.netlify.app/" target="_blank">Sophist</a></li>
+      <li><a class="site-link" href="https://weatherapp-laasya.netlify.app/" target="_blank">Weather App</a></li>
+      <li><a class="site-link" href="https://sealya.netlify.app/" target="_blank">Sealya - Hackathon Project</a></li>
+    </ul>
+  </section>
+
+  <section id="mygames">
+    <h2 style="text-align:center; font-size: 2.5rem; color: #f5427e; margin-bottom: 2rem;">•Games•</h2>
+    <div class="game-card">
+      <h3>Gibberish Oracle</h3>
+      <p>Type nonsense, get wisdom. Absurd and oddly poetic.</p>
+      <div><span class="tech-badge">JavaScript</span><span class="tech-badge">HTML/CSS</span><span class="tech-badge">AI Prompt Logic</span><span class="tech-badge">Netlify</span></div>
+      <div class="screenshot-grid">
+        <div><p>Desktop View</p><img src="gibberishdesktop.jpg"></div>
+        <div><p>Mobile View</p><img src="gibberishmobile.jpg"></div>
+      </div>
+      <div class="game-links"><a href="https://github.com/mlaasya07/Gibberish-Oracle?tab=readme-ov-file" target="_blank" style = "color: #4db8ff">GitHub</a><a href="https://gibberishoracle.netlify.app" target="_blank" style = "color: #4db8ff ">Play Game</a></div>
+    </div>
+    <div class="game-card">
+      <h3>Sophist</h3>
+      <p>A smug AI philosopher that debates and spins logic circles around you.</p>
+      <div><span class="tech-badge">React</span><span class="tech-badge">OpenAI</span><span class="tech-badge">TailwindCSS</span><span class="tech-badge">Netlify</span></div>
+      <div class="screenshot-grid">
+        <div><p>Desktop View</p><img src="sophistdesktop.jpg" /></div>
+        <div><p>Mobile View</p><img src="sophistmobile.jpg" /></div>
+      </div>
+      <div class="game-links"><a href="https://github.com/mlaasya07/Sophist_" target="_blank" style = "color: #4db8ff">GitHub</a><a href="https://sophisttheartofmanipulation.netlify.app" target="_blank" style = "color: #4db8ff">Play Game</a></div>
+    </div>
+  </section>
+
+  <section id="bitverse">
+    <h2 style="text-align:center; font-size: 2.5rem; color: #4db8ff; margin-bottom: 2rem;">BitVerse - The Multiverse of Coding</h2>
+    <div class="game-card">
+      <h3>GitHub Contribution Graph</h3>
+      <p>This is how much code I’ve breathed into the universe 🌱</p>
+      <p><a href="https://github.com/mlaasya07" target="_blank" style = "color: #4db8ff">View my GitHub profile</a></p>
+      <div class="calendar">Loading contributions...</div>
+    </div>
+    <div class="game-card">
+      <h3>LeetCode Stats</h3>
+      <p><a href="https://leetcode.com/u/ydHg4pM34m/" target="_blank" style = "color: #4db8ff">View my LeetCode profile</a></p>
+    </div>
+    <div class="game-card">
+      <h3>CodinGame Progress</h3>
+      <p><a href="https://www.codingame.com/profile/1926e3967e6d68739783fc04eba77d9a5852966" target="_blank" style = "color: #4db8ff">Visit my CodinGame profile</a></p>
+    </div>
+  </section>
+
+  <section id="hackathons">
+    <h2 style="text-align:center">•Hackathons•</h2>
+    <ul>
+      <li><a class="site-link" href="https://devpost.com/mlaasy16/challenges" target="_blank" style = "color: #4db8ff">- World's Largest Hackathon - DEVPOST</a></li>
+      <li><a href="files/Rayv “Code-o-Tron 3000” Virtual Hackathon.pdf" target="_blank" style = "color: #4db8ff">- Code-o-Tron 3000 / Recommendation System [Problem 2] - Rayv</a></li>
+      <li><a class="site-link" href="https://unstop.com/o/xg6ElMW?lb=L6ONYD4C&utm_medium=Share&utm_source=laasyael99698&utm_campaign=Innovation_challenge" target="_blank" style = "color: #4db8ff">- Participated in Tech-a-Thon 4.0 - By ECE Society
+Birla Institute of Technology (BIT), Mesra, Ranchi </a></li>
+
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>If you've got questions, ideas, bugs, or cryptic prophecies to decode:-</p>
+    <p> - Try whispering into the void (no guarantees).</p>
+    <p> - Or, just email me like a normal human</p>
+    <P> - GitHub DMs? Acceptable.</p>
+    <p> - Summon me by typing gibberish into a website and hoping I’m watching.</p>
+    <p> - Bonus points if you include a meme, frog, or emotionally unstable AI.</p>
+    <p> - Carrier pigeons are welcome but must wear little hats.</p>
+    <p> - I'm usually online, unless I’ve fallen into a creative coding rabbit hole again.</p>
+    <p>
+    <p><a class="icon-link" href="mailto:mlaasy16@gmail.com" style = "color: #4db8ff"><i class="fas fa-envelope"></i> mlaasy16@gmail.com</a></p>
+    <p>
+      <a class="icon-link" href="https://github.com/mlaasya07" target="_blank" style = "color: #4db8ff" ><i class="fab fa-github"></i> GitHub</a> |
+      <a class="icon-link" href="https://linkedin.com/in/mlaasya07" target="_blank" style = "color: #4db8ff"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </p>
+  </section>
+
+  <footer >
+  <p>&copy; 2025 Laasya. Built with Passion and a sprinkle of <a href="#easteregg" class="no-underline"  onclick="showSection('easteregg')">magic ♡</a></p>
+  <p>All rights reserved. Do not copy without permission.</p>
+</footer>
+
+
+  <section id="easteregg">
+  <h2 class="glitch" style="text-align:center; font-size: 2.5rem; color: #f5427e;">✨ You broke reality ✨</h2>
+
+  <p id="secretText" style="text-align:center; font-size: 1.2rem; margin-bottom: 2rem;"></p>
+
+  <div style="text-align:center;">
+    <button id="dangerBtn" style="padding: 0.5rem 1rem; border: none; background-color: #940000; color: white; border-radius: 8px; cursor: pointer; font-weight: bold;">DO NOT PRESS THIS</button>
+  </div>
+
+  <pre style="background: #111; color: rgb(164, 38, 3); padding: 2rem; margin-top: 3rem; border-radius: 10px; max-width: 800px; margin-left: auto; margin-right: auto;">
+&gt; USER ACCESS GRANTED
+&gt; Loading memory fragment 008: "Rooted Realms Alpha Logs"
+&gt; ANITA: "Rei said the dream loop isn't real... but I saw it again."
+  </pre>
+
+  <div style="text-align:center; margin-top:2rem;">
+    <button onclick="window.location.href= 'https://aboutme-laasya.netlify.app/' " style="padding: 0.5rem 1rem; border: none; background-color: #940000; color: white; border-radius: 8px; cursor: pointer;">Return to Reality</button>
+  </div>
+</section>
+
+   <script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const typedElement = document.querySelector('.typed');
+    if (typedElement) {
+      new Typed('.typed', {
+        strings: typedElement.getAttribute('data-typed-items').split(','),
+        typeSpeed: 100,
+        backSpeed: 40,
+        backDelay: 2000,
+        loop: true,
+        smartBackspace: true,
+        showCursor: true,
+        cursorChar: '|'
+      });
+    }
+  });
+</script>
+  <script>
+    AOS.init({ duration:1200, once:true });
+
+    function showSection(id) {
+      document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+      const target = document.getElementById(id);
+      if (target) target.classList.add("active");
+      document.getElementById("emojiWrapper").style.display = (id === "home") ? "block" : "none";
+      if (id === "bitverse") GitHubCalendar(".calendar", "mlaasya07", { responsive: true, tooltips: true });
+      setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    }
+
+    window.onload = () => {
+      const toggle = document.getElementById("themeToggle");
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      function applyTheme(dark) {
+        document.body.classList.toggle('dark', dark);
+        toggle.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      }
+      toggle.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+      const saved = localStorage.getItem('theme');
+      applyTheme(saved === 'dark' || (!saved && prefersDark));
+    };
+
+    function typeWrite(msg, elId) {
+      const el = document.getElementById(elId);
+      el.innerText = "";
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < msg.length) el.innerText += msg[i++];
+        else clearInterval(interval);
+      }, 50);
+    }
+
+    window.addEventListener("hashchange", () => {
+      const id = location.hash.replace("#", "");
+      if (id === "easteregg") typeWrite("Somewhere between logic and dreams, you found the key.", "secretText");
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const dangerBtn = document.getElementById("dangerBtn");
+      if (dangerBtn) dangerBtn.onclick = () => {
+        document.body.style.filter = "invert(1)";
+        alert("...you were warned.");
+      };
+    });
+
+    const orb = document.getElementById('orb');
+    document.addEventListener('mousemove', e => {
+      orb.style.left = `${e.clientX}px`;
+      orb.style.top = `${e.clientY}px`;
+    });
+
+    window.addEventListener('offline', () => {
+      document.body.classList.add('offline');
+      const toast = document.getElementById('offline-toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 5000);
+    });
+
+    window.addEventListener('online', () => {
+      document.body.classList.remove('offline');
+      document.getElementById('offline-toast').classList.remove('show');
+    });
+  </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const dropdowns = document.querySelectorAll('.dropdown > a');
+
+    dropdowns.forEach(drop => {
+      drop.addEventListener('click', function (e) {
+        e.preventDefault();
+        const menu = this.nextElementSibling;
+        if (menu && menu.classList.contains('dropdown-content')) {
+          menu.classList.toggle('active');
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
