@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Projects — Code.With.Laasya</title>
+  <meta name="description" content="Code, chaos, and creative experiments — all documented with brutal honesty." />
+  <style>
+    :root{
+      --bg:#0b0f12;
+      --card:#0f1720;
+      --muted:#9aa7b2;
+      --accent:#E4CC37;
+      --primary:#96A13A;
+      --border: rgba(255,255,255,0.05);
+      --secondary:#2a2f35;
+      --text:#E6EEF3;
+      --radius:12px;
+      font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Segoe UI Mono", monospace;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,var(--bg) 0%, #071018 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:32px}
+    header{padding-top:48px;padding-bottom:24px;text-align:center}
+    h1{font-size:40px;margin:0 0 8px}
+    p.lead{color:var(--muted);font-size:18px;margin:0}
+    .category{margin:48px 0}
+    .category h2{font-size:22px;margin:0 0 6px}
+    .category p{color:var(--muted);margin:0 0 18px}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+      transition:transform .25s ease, border-color .2s ease;
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+    .card:hover{transform:translateY(-6px); border-color:rgba(150,161,58,0.5)}
+    .thumb{width:100%;aspect-ratio:16/9;overflow:hidden;background:#111}
+    .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+    .card:hover .thumb img{transform:scale(1.05)}
+    .card-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .project-title{font-weight:700;font-size:18px}
+    .project-desc{color:var(--muted);font-size:14px;margin:0}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .tag{background:var(--secondary);padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+    .actions{display:flex;gap:10px;margin-top:auto}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      background:transparent;color:var(--text);text-decoration:none;font-size:14px;
+    }
+    .btn.primary{background:linear-gradient(90deg,var(--primary),#6f8e2e);color:#071009;border:none}
+    .btn.outline{border:1px solid rgba(255,255,255,0.06);background:transparent}
+    .note{margin:32px 0;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid var(--border);color:var(--muted);text-align:center}
+    /* responsive tweaks */
+    @media (max-width:520px){
+      h1{font-size:28px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+        <a btn href="home.html" style="display:inline-block; margin-top:20px; margin-bottom:-20px; color:#E4CC37; font-size:14px; text-decoration:none;">← Back to Home</a>
+    <header>
+      <h1>My Projects</h1>
+      <p class="lead">Code, chaos, and creative experiments — all documented with brutal honesty.</p>
+    </header>
+
+    <!-- Projects data recreated from Projects.tsx -->
+    <main>
+      <!-- Category 1 -->
+      <section class="category">
+        <h2>Things I Built for Him</h2>
+        <p>There's no him T_T — just passion projects and debug tears.</p>
+
+        <div class="grid" aria-label="Projects grid">
+          <article class="card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop" alt="PAGE-R project image">
+            </div>
+            <div class="card-body">
+              <div>
+                <div class="project-title">PAGE-R</div>
+                <div class="project-desc">A page ranking algorithm implementation — because sometimes you need to organize chaos</div>
+                <div class="tags" aria-hidden="true">
+                  <span class="tag">React</span><span class="tag">AI assistant</span><span class="tag">AI</span>
+                </div>
+              </div>
+
+              <div class="actions">
+                <a class="btn outline" href="https://github.com/mlaasya07/PAGE-R" target="_blank" rel="noopener noreferrer">Code ↗</a>
+                <!-- no demo -->
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Category 2 -->
+      <section class="category">
+        <h2>Ragebaiting My Best Friend — Chaotic Fun Builds</h2>
+        <p>When friendship meets function... and a little bit of trolling.</p>
+
+        <div class="grid">
+          <article class="card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=800&fit=crop" alt="RoshiniLovesFood">
+            </div>
+            <div class="card-body">
+              <div>
+                <div class="project-title">RoshiniLovesFood</div>
+                <div class="project-desc">A food-themed project built to roast my best friend's eating habits</div>
+                <div class="tags">
+                  <span class="tag">React</span><span class="tag">JavaScript</span><span class="tag">Humor</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="btn outline" href="https://github.com/mlaasya07/RoshiniLovesFood" target="_blank" rel="noopener noreferrer">Code ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&h=800&fit=crop" alt="ARCADE-X">
+            </div>
+            <div class="card-body">
+              <div>
+                <div class="project-title">ARCADE-X</div>
+                <div class="project-desc">A collection of nostalgic games and games I've developed — where retro meets code</div>
+                <div class="tags">
+                  <span class="tag">JavaScript</span><span class="tag">Game Dev</span><span class="tag">HTML5</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="btn primary" href="https://the-arcadex.netlify.app/" target="_blank" rel="noopener noreferrer">Demo ↗</a>
+                <a class="btn outline" href="https://github.com/mlaasya07/Nostalgic-Game" target="_blank" rel="noopener noreferrer">Code ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Category 3 -->
+      <section class="category">
+        <h2>Creative Expression</h2>
+        <p>When code meets emotions and poetry flows through the terminal.</p>
+
+        <div class="grid">
+          <article class="card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&h=800&fit=crop" alt="404-P03M.3X3">
+            </div>
+            <div class="card-body">
+              <div>
+                <div class="project-title">404-P03M.3X3</div>
+                <div class="project-desc">A website for my poetry and fun-hubs — where words get debugged</div>
+                <div class="tags">
+                  <span class="tag">HCJ</span><span class="tag">Poetry</span><span class="tag">Creative</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="btn primary" href="https://404-p03m-3x3.netlify.app/" target="_blank" rel="noopener noreferrer">Demo ↗</a>
+                <a class="btn outline" href="https://github.com/mlaasya07/404-P03M.3X3" target="_blank" rel="noopener noreferrer">Code ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Category 4 -->
+      <section class="category">
+        <h2>Upcoming Projects</h2>
+        <p>Currently in debug mode... stay tuned.</p>
+
+        <div class="grid">
+          <article class="card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&h=800&fit=crop" alt="Docere MedDex - DocDex">
+            </div>
+            <div class="card-body">
+              <div>
+                <div class="project-title">Docere MedDex - DocDex</div>
+                <div class="project-desc">Your Pocket Medical PokeDex — catching diagnoses instead of Pokémon</div>
+                <div class="tags">
+                  <span class="tag">React</span><span class="tag">Healthcare</span><span class="tag">AI</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="btn outline" href="https://github.com/mlaasya07/DocDex-v1" target="_blank" rel="noopener noreferrer">Code ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="note">
+        More projects brewing in the pipeline... currently wrestling with merge conflicts.
+      </div>
+    </main>
+
+  </div>
+</body>
+</html>

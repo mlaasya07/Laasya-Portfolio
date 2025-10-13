@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="assets/heart-icon.png" />
+  <title>Idea Journal — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0c; --card:#0f1113; --muted:#9aa7b2; --primary:#96A13A; --border:#1f2224; --text:#E6E6E6; --secondary:#243119;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:"Roboto Mono", monospace; background:var(--bg); color:var(--text)}
+    .container{max-width:1100px;margin:0 auto;padding:0 18px}
+    header{padding:72px 0 28px; text-align:center}
+    h1{font-size:44px;margin:6px 0}
+    .muted{color:var(--muted)}
+    .grid{display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); margin-top:28px}
+    .idea-card{background:var(--card); border-radius:12px; overflow:hidden; border:1px solid var(--border); transition:transform .2s}
+    .idea-card:hover{transform:translateY(-6px)}
+    .thumb{height:180px; background:#091010; overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .card-body{padding:18px}
+    .status{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-size:12px}
+    .status.draft{background:rgba(255,255,255,0.02); color:var(--muted)}
+    .status.in-progress{background:var(--primary); color:#071402}
+    .status.completed{background:var(--secondary); color:#fff}
+    .features{margin-top:12px}
+    .feature{font-size:13px; color:var(--muted); display:flex; gap:8px; align-items:flex-start}
+    .tools{margin-top:12px}
+    .chip{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);font-size:12px;margin-right:8px;margin-bottom:6px}
+    .cta{margin:36px auto; max-width:720px; text-align:center; padding:18px; border-radius:12px; border:1px solid var(--border); background:var(--card)}
+    footer{padding:40px 0; text-align:center; color:var(--muted)}
+    a {color: #E4CC37; text-decoration:none}
+    a:hover {color: #96A13A}
+    .btn {display:inline-block; padding:10px 14px; background:var(--primary); color:#061204; border-radius:8px; text-decoration:none; font-weight:700}
+    .btn:hover {background:var(--accent); color:#1a1200}  
+  </style>
+</head>
+<body>
+  <main class="container">
+    <a btn href="home.html" style="display:inline-block; margin-top:20px; margin-bottom:-20px; color:#E4CC37; font-size:14px; text-decoration:none;">← Back to Home</a>
+    <header>
+      <div style="font-size:28px; color:var(--primary)">💡</div>
+      <h1>Idea Journal</h1>
+      <p class="muted">App ideas, half-built experiments, and design notes from the chaos</p>
+    </header>
+
+    <section>
+      <div class="grid">
+        <!-- Idea 1 -->
+        <article class="idea-card">
+          <div class="thumb">
+            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop" alt="Emotion-Based Code Formatter">
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Emotion-Based Code Formatter</h3>
+              <span class="status draft">💡 draft</span>
+            </div>
+            <p class="muted" style="margin:10px 0 0">A formatter that changes your code style based on commit message emotions</p>
+
+            <div class="features">
+              <div style="font-size:13px; color:var(--primary); margin-bottom:6px">✨ Feature Wishlist:</div>
+              <div class="feature">→ Angry commits = aggressive spacing</div>
+              <div class="feature">→ Happy commits = cheerful variable names</div>
+              <div class="feature">→ Sad commits = depressing but functional code</div>
+            </div>
+
+            <div class="tools" style="margin-top:10px">
+              <div style="font-size:13px; color:var(--muted); margin-bottom:6px">Tools & Tech:</div>
+              <span class="chip">TypeScript</span>
+              <span class="chip">AST Parser</span>
+              <span class="chip">Sentiment Analysis</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Idea 2 -->
+        <article class="idea-card">
+          <div class="thumb">
+            <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&h=600&fit=crop" alt="Debug Buddy AI">
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Debug Buddy AI</h3>
+              <span class="status in-progress">🟢 in-progress</span>
+            </div>
+            <p class="muted" style="margin:10px 0 0">An AI that roasts your code but also helps you fix it</p>
+
+            <div class="features">
+              <div style="font-size:13px; color:var(--primary); margin-bottom:6px">✨ Feature Wishlist:</div>
+              <div class="feature">→ Sarcastic error explanations</div>
+              <div class="feature">→ Gentle nudges toward better practices</div>
+              <div class="feature">→ Celebrates your small wins</div>
+            </div>
+
+            <div class="tools" style="margin-top:10px">
+              <div style="font-size:13px; color:var(--muted); margin-bottom:6px">Tools & Tech:</div>
+              <span class="chip">AI API</span>
+              <span class="chip">React</span>
+              <span class="chip">Humor Database</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Idea 3 -->
+        <article class="idea-card">
+          <div class="thumb">
+            <img src="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=800&h=600&fit=crop" alt="Pomodoro with Consequences">
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Pomodoro with Consequences</h3>
+              <span class="status completed">✅ completed</span>
+            </div>
+            <p class="muted" style="margin:10px 0 0">Timer that donates to charity if you break focus (but makes it fun)</p>
+
+            <div class="features">
+              <div style="font-size:13px; color:var(--primary); margin-bottom:6px">✨ Feature Wishlist:</div>
+              <div class="feature">→ Focus sessions with real stakes</div>
+              <div class="feature">→ Gamified productivity tracking</div>
+              <div class="feature">→ Charity integration</div>
+            </div>
+
+            <div class="tools" style="margin-top:10px">
+              <div style="font-size:13px; color:var(--muted); margin-bottom:6px">Tools & Tech:</div>
+              <span class="chip">React</span>
+              <span class="chip">Stripe</span>
+              <span class="chip">Push Notifications</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="cta">
+      <div style="font-size:36px; color:var(--primary)">💡</div>
+      <h2 style="margin:6px 0">Have an idea to share?</h2>
+      <p class="muted" style="margin:10px 0 12px">Got an idea to collaborate on? Let's build something chaotic together.</p>
+      <a class="btn" href="mailto:mlaasy16@gmail.com" style="display:inline-block; padding:10px 14px; background:var(--primary); color:#061204; border-radius:8px; text-decoration:none; font-weight:700">Reach Out</a>
+    </div>
+
+    <footer style="padding:40px 0; text-align:center; color:var(--muted)">
+      © Laasya — Idea Journal
+    </footer>
+  </main>
+</body>
+</html>

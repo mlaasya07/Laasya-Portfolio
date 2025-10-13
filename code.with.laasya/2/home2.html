@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Home — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: 0 0% 0%;
+      --card: 210 40% 6%;
+      --muted: 210 15% 65%;
+      --primary: 62 35% 43%;
+      --accent: 48 85% 55%;
+      --border: 0 0% 12%;
+      --secondary: 90 25% 17%;
+      --text: 0 0% 93%;
+      --terminal-glow: 62 35% 43%;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: hsl(var(--bg));
+      color: hsl(var(--text));
+      font-family:"Roboto Mono", monospace;
+      -webkit-font-smoothing:antialiased;
+      line-height:1.5;
+    }
+    a{color: hsl(var(--primary)); text-decoration:none; transition: color 0.2s;}
+    a:hover{color: hsl(var(--accent))}
+    .container{max-width:1100px; margin:0 auto; padding:0 18px}
+    .hero{padding:120px 0 60px; text-align:center;}
+    h1{font-size:48px; margin:18px 0; line-height:1.02; text-shadow: 0 0 20px hsla(var(--terminal-glow), 0.3);}
+    p.lead{font-size:18px; color: hsl(var(--muted)); max-width:760px; margin:0 auto}
+    .btn-row{display:flex; gap:12px; justify-content:center; margin-top:20px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px; padding:12px 18px; border-radius:10px;
+      background: hsl(var(--primary)); color: hsl(90 25% 5%); font-weight:700; border:none; cursor:pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover{background: hsl(var(--accent)); color: hsl(48 85% 10%)}
+    .card{background: hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:12px; padding:28px}
+    .about{padding:40px 0; max-width: 800px; margin: 0 auto;}
+    .tagline{font-size:13px; color: hsl(var(--muted)); font-style:italic; margin-top: 12px;}
+    nav{padding: 20px 0; border-bottom: 1px solid hsl(var(--border));}
+    nav .container{display: flex; justify-content: space-between; align-items: center;}
+    nav a{margin: 0 12px; font-size: 14px;}
+    footer{padding: 40px 0; text-align: center; border-top: 1px solid hsl(var(--border)); margin-top: 60px;}
+    footer .socials{display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;}
+    footer .socials a{color: hsl(var(--muted));}
+    footer .socials a:hover{color: hsl(var(--primary));}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div><strong>Code.With.Laasya</strong></div>
+      <div>
+        <a href="home2.html">Home</a>
+        <a href="projects3.html">Projects</a>
+        <a href="errors2.html">Error Logs</a>
+        <a href="videos.html">Videos</a>
+        <a href="ideas.html">Ideas</a>
+        <a href="tips.html">Tips</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Hi, I'm Laasya — I debug feelings and functions.</h1>
+      <p class="lead">
+        Welcome to my world of projects, mistakes, and code-induced emotional breakdowns.
+      </p>
+      <div class="btn-row">
+        <a href="projects3.html" class="btn">See My Projects</a>
+        <a href="tips.html" class="btn">Learn With Me</a>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="card">
+        <h2>About This Space</h2>
+        <p>
+          Started coding to make a calculator, ended up calculating heartbreaks.
+        </p>
+        <p class="tagline">
+          "Code, cry, coffee, repeat."
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="socials">
+      <a href="https://github.com/mlaasya07" target="_blank" aria-label="GitHub">GitHub</a>
+      <a href="https://www.linkedin.com/in/mlaasya07/" target="_blank" aria-label="LinkedIn">LinkedIn</a>
+      <a href="https://www.codingame.com/profile/1926e3967e6d68739783fc04eba77d9a5852966" target="_blank" aria-label="CodinGame">CodinGame</a>
+      <a href="https://leetcode.com/u/ydHg4pM34m/" target="_blank" aria-label="LeetCode">LeetCode</a>
+    </div>
+    <p style="color: hsl(var(--muted)); font-size: 14px;">
+      "Errors don't scare me anymore. People do."
+    </p>
+  </footer>
+</body>
+</html>

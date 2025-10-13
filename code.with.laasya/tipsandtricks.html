@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Code Survival Guide — Tips & Tricks</title>
+  <style>
+    :root{
+      --bg:#071018;
+      --card:#0f1720;
+      --muted:#9aa7b2;
+      --accent:#E4CC37;
+      --primary:#96A13A;
+      --secondary:#21262b;
+      --text:#E6EEF3;
+      --radius:12px;
+      font-family:"Roboto Mono", monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#051015);color:var(--text);-webkit-font-smoothing:antialiased;padding:28px}
+    .container{max-width:900px;margin:0 auto}
+    header{text-align:center;padding-top:24px;padding-bottom:18px}
+    h1{font-size:40px;margin:0}
+    .subtitle{color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+    .tip{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      border:1px solid rgba(255,255,255,0.04);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .tip button{
+      width:100%;padding:14px;display:flex;align-items:center;gap:12px;background:transparent;border:0;color:var(--text);font-size:15px;cursor:pointer;
+    }
+    .tip .meta{flex:1}
+    .tip .meta h3{margin:0;font-size:16px}
+    .tip .meta p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .category-pill{display:inline-block;background:var(--secondary);padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted);margin-top:8px}
+    .arrow{transition:transform .22s ease}
+    .content{padding:14px;border-top:1px solid rgba(255,255,255,0.03);font-family:monospace;background:rgba(255,255,255,0.01)}
+    pre{white-space:pre-wrap;margin:0;color:var(--muted);font-size:13px}
+    .commandments{margin-top:20px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.04);padding:16px;border-radius:12px}
+    .commandments h3{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+    ul{padding-left:18px;margin:0;color:var(--muted)}
+    li{margin-bottom:8px}
+    .num{color:var(--primary);font-weight:700;margin-right:8px}
+    @media (max-width:520px){h1{font-size:28px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="font-size:28px;color:var(--primary);margin-bottom:6px;">📚</div>
+      <h1>Code Survival Guide</h1>
+      <div class="subtitle">Tips & tricks I wish someone told me earlier</div>
+    </header>
+
+    <main>
+      <div class="list" id="tips-list">
+        <!-- Tip 1 -->
+        <section class="tip">
+          <button aria-expanded="true" data-tip="1" onclick="toggleTip(1)">
+            <div class="meta">
+              <div style="display:flex;align-items:center;gap:10px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0.9"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>How to read error logs without crying</h3>
+              </div>
+              <p>Error messages are just your code's way of asking for help</p>
+              <span class="category-pill">Debugging</span>
+            </div>
+            <div class="arrow" id="arrow-1">→</div>
+          </button>
+          <div class="content" id="content-1">
+            <pre>First, breathe. Then:
+
+1. Read the ENTIRE error message (yes, all of it)
+2. Note the file name and line number
+3. Google the error type (not the whole message)
+4. Check if you're even in the right file
+5. console.log() is your best friend
+6. Take a break if you're stuck for 20+ minutes
+
+Remember: Every developer, even the pros, still Googles "how to center a div"</pre>
+          </div>
+        </section>
+
+        <!-- Tip 2 -->
+        <section class="tip">
+          <button aria-expanded="false" data-tip="2" onclick="toggleTip(2)">
+            <div class="meta">
+              <div style="display:flex;align-items:center;gap:10px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>Why semicolons save relationships</h3>
+              </div>
+              <p>Consistency is key in code and in life</p>
+              <span class="category-pill">Best Practices</span>
+            </div>
+            <div class="arrow" id="arrow-2">→</div>
+          </button>
+          <div class="content" id="content-2" style="display:none">
+            <pre>Whether you use semicolons or not, PICK ONE and stick with it.
+
+Your linter will thank you.
+Your teammates will thank you.
+Your future self will thank you.
+
+Mixed semicolons in a codebase = trust issues.
+
+Pro tip: Configure Prettier and never think about it again.</pre>
+          </div>
+        </section>
+
+        <!-- Tip 3 -->
+        <section class="tip">
+          <button aria-expanded="false" data-tip="3" onclick="toggleTip(3)">
+            <div class="meta">
+              <div style="display:flex;align-items:center;gap:10px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>The real reason your code isn't working</h3>
+              </div>
+              <p>You forgot to breathe</p>
+              <span class="category-pill">Mindset</span>
+            </div>
+            <div class="arrow" id="arrow-3">→</div>
+          </button>
+          <div class="content" id="content-3" style="display:none">
+            <pre>Seriously though, coding while stressed = more bugs.
+
+Try this:
+- Step away from your keyboard
+- Drink some water
+- Explain the problem out loud (rubber duck debugging)
+- Take a 5-minute walk
+- Come back with fresh eyes
+
+Your brain needs oxygen to debug. Metaphorically and literally.
+
+Bonus: Your mental health is not a nice-to-have feature.</pre>
+          </div>
+        </section>
+
+        <!-- Tip 4 -->
+        <section class="tip">
+          <button aria-expanded="false" data-tip="4" onclick="toggleTip(4)">
+            <div class="meta">
+              <div style="display:flex;align-items:center;gap:10px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>Git commit messages that don't lie</h3>
+              </div>
+              <p>"fixed stuff" is not a commit message</p>
+              <span class="category-pill">Git</span>
+            </div>
+            <div class="arrow" id="arrow-4">→</div>
+          </button>
+          <div class="content" id="content-4" style="display:none">
+            <pre>Good commit messages = future you being grateful
+
+Bad: "updated code"
+Good: "fix: resolved infinite loop in user auth"
+
+Format:
+[type]: [what you did]
+
+Types:
+- feat: new feature
+- fix: bug fix
+- refactor: code cleanup
+- docs: documentation
+- style: formatting
+
+Your future self debugging at 2 AM will appreciate it.</pre>
+          </div>
+        </section>
+
+        <!-- Tip 5 -->
+        <section class="tip">
+          <button aria-expanded="false" data-tip="5" onclick="toggleTip(5)">
+            <div class="meta">
+              <div style="display:flex;align-items:center;gap:10px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>When to use console.log vs debugger</h3>
+              </div>
+              <p>Both are valid, fight me</p>
+              <span class="category-pill">Debugging</span>
+            </div>
+            <div class="arrow" id="arrow-5">→</div>
+          </button>
+          <div class="content" id="content-5" style="display:none">
+            <pre>console.log():
+- Quick checks
+- Seeing data flow
+- When you're too lazy for breakpoints
+- Literally everywhere
+
+debugger;
+- Complex logic
+- When you need to pause time
+- Inspector tools are your friend
+- When console.log() betrays you
+
+There's no shame in either. Use what works.</pre>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="commandments">
+        <h3>❤️ Laasya's Coding Commandments</h3>
+        <ul>
+          <li><strong class="num">1.</strong> Read the docs (yes, actually read them)</li>
+          <li><strong class="num">2.</strong> Save your work. Then save it again.</li>
+          <li><strong class="num">3.</strong> Test in production is not a vibe</li>
+          <li><strong class="num">4.</strong> Comments explain why, not what</li>
+          <li><strong class="num">5.</strong> Your 3 AM code will haunt you</li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Basic accordion behavior
+    let openTip = 1;
+    function toggleTip(id){
+      const content = document.getElementById('content-' + id);
+      const arrow = document.getElementById('arrow-' + id);
+      const expanded = content.style.display !== 'none' && content.style.display !== '';
+      // close previously opened
+      if(openTip && openTip !== id){
+        const prevC = document.getElementById('content-' + openTip);
+        const prevA = document.getElementById('arrow-' + openTip);
+        if(prevC) prevC.style.display = 'none';
+        if(prevA) prevA.style.transform = 'rotate(0deg)';
+      }
+      if(!expanded){
+        content.style.display = 'block';
+        arrow.style.transform = 'rotate(90deg)';
+        openTip = id;
+      } else {
+        content.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+        openTip = null;
+      }
+    }
+
+    // Initialize: ensure first is open
+    document.addEventListener('DOMContentLoaded', function(){
+      document.getElementById('content-1').style.display = 'block';
+      document.getElementById('arrow-1').style.transform = 'rotate(90deg)';
+    });
+  </script>
+</body>
+</html>

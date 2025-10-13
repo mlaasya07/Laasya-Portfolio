@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="assets/heart-icon.png" />
+  <title>Video Zone — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0c; --card:#0f1113; --muted:#9aa7b2; --primary:#96A13A; --border:#1f2224; --text:#E6E6E6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:"Roboto Mono", monospace; background:var(--bg); color:var(--text)}
+    .container{max-width:1100px;margin:0 auto;padding:0 18px}
+    header{padding:72px 0 28px; text-align:center}
+    h1{font-size:44px;margin:6px 0}
+    .muted{color:var(--muted)}
+    .section{margin-top:20px; margin-bottom:24px}
+    .category{margin-bottom:28px}
+    .videos{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+    .video-card{background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; cursor:pointer; transition:transform .14s}
+    .video-card:hover{transform:translateY(-6px)}
+    .thumb{position:relative; height:190px; overflow:hidden}
+    .thumb img{width:100%; height:100%; object-fit:cover; display:block}
+    .overlay{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(rgba(0,0,0,0.0), rgba(0,0,0,0.35)); opacity:0; transition:opacity .12s;
+    }
+    .video-card:hover .overlay{opacity:1}
+    .play-btn{background:var(--primary); padding:12px; border-radius:50%}
+    .duration{position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,0.75); padding:6px 8px; border-radius:6px; font-size:12px}
+    .video-body{padding:12px}
+    .tags{display:flex; gap:8px; flex-wrap:wrap}
+    .tag{background:rgba(255,255,255,0.02); padding:6px 8px; border-radius:8px; font-size:12px}
+    .empty-cta{margin-top:24px; padding:18px; border-radius:12px; border:1px solid var(--border); background:var(--card); text-align:center}
+    footer{padding:40px 0; text-align:center; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <a btn href="home.html" style="display:inline-block; margin-top:20px; margin-bottom:-20px; color:#E4CC37; font-size:14px; text-decoration:none;">← Back to Home</a>
+    <header>
+      <div style="font-size:28px; color:var(--primary)">🎬</div>
+      <h1>Video Zone</h1>
+      <p class="muted">Short, cinematic clips documenting the coding journey</p>
+    </header>
+
+    <section class="section">
+      <!-- Category: Learn With Me -->
+      <div class="category">
+        <h2 style="margin:0 0 6px">Learn With Me</h2>
+        <p class="muted" style="margin:0 0 12px">Mini coding lessons and tutorials</p>
+
+        <div class="videos">
+          <article class="video-card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=450&fit=crop" alt="Array Methods You Actually Need">
+              <div class="overlay"><div class="play-btn">▶</div></div>
+              <div class="duration">8:45</div>
+            </div>
+            <div class="video-body">
+              <h3 style="margin:0 0 8px">Array Methods You Actually Need</h3>
+              <div class="tags">
+                <span class="tag">JavaScript</span>
+                <span class="tag">Tutorial</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="video-card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&h=450&fit=crop" alt="CSS Grid Finally Made Sense">
+              <div class="overlay"><div class="play-btn">▶</div></div>
+              <div class="duration">12:30</div>
+            </div>
+            <div class="video-body">
+              <h3 style="margin:0 0 8px">CSS Grid Finally Made Sense</h3>
+              <div class="tags">
+                <span class="tag">CSS</span>
+                <span class="tag">Layout</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Category: Things I Built for Him -->
+      <div class="category">
+        <h2 style="margin:0 0 6px">Things I Built for Him</h2>
+        <p class="muted" style="margin:0 0 12px">Theres no him... just codes and empty comments</p>
+
+        <div class="videos">
+          <article class="video-card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1494548162494-384bba4ab999?w=800&h=450&fit=crop" alt="Building a Heartbreak Calculator">
+              <div class="overlay"><div class="play-btn">▶</div></div>
+              <div class="duration">5:20</div>
+            </div>
+            <div class="video-body">
+              <h3 style="margin:0 0 8px">Building a Medical Study Buddy</h3>
+              <div class="tags">
+                <span class="tag">React</span>
+                <span class="tag">Emotions</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Category: Random Chaos -->
+      <div class="category">
+        <h2 style="margin:0 0 6px">Random Chaos</h2>
+        <p class="muted" style="margin:0 0 12px">Funny experiments and coding shenanigans</p>
+
+        <div class="videos">
+          <article class="video-card">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=450&fit=crop" alt="Debugging at 3 AM: A Horror Story">
+              <div class="overlay"><div class="play-btn">▶</div></div>
+              <div class="duration">6:15</div>
+            </div>
+            <div class="video-body">
+              <h3 style="margin:0 0 8px">Debugging at 3 AM: A Horror Story</h3>
+              <div class="tags">
+                <span class="tag">Vlog</span>
+                <span class="tag">Humor</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="empty-cta">
+        <div style="font-size:28px; color:var(--primary)">🎞️</div>
+        <p class="muted" style="margin:8px 0 12px">More videos coming soon... currently editing the chaos.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p class="muted">© Laasya — Video Zone</p>
+    </footer>
+  </main>
+</body>
+</html>

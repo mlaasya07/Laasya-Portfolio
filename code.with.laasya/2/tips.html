@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Code Survival Guide — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: 0 0% 0%;
+      --card: 210 40% 6%;
+      --muted: 210 15% 65%;
+      --primary: 62 35% 43%;
+      --accent: 48 85% 55%;
+      --border: 0 0% 12%;
+      --secondary: 90 25% 17%;
+      --text: 0 0% 93%;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background: hsl(var(--bg)); color: hsl(var(--text)); font-family:"Roboto Mono", monospace; padding:28px; line-height:1.5;}
+    .container{max-width:900px;margin:0 auto}
+    header{text-align:center;padding-top:100px;padding-bottom:32px}
+    h1{font-size:48px;margin:12px 0}
+    .subtitle{color: hsl(var(--muted)); font-size:18px;}
+    .list{display:flex;flex-direction:column;gap:16px;margin-top:32px}
+    .tip{
+      background: hsl(var(--card));
+      border:1px solid hsl(var(--border));
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .tip-header{
+      width:100%;padding:16px;display:flex;align-items:center;gap:12px;background:transparent;border:0;color: hsl(var(--text));cursor:pointer;
+    }
+    .tip-header:hover{background:hsla(var(--muted), 0.05)}
+    .tip .meta{flex:1}
+    .tip .meta h3{margin:0;font-size:16px}
+    .tip .meta p{margin:6px 0 0;color: hsl(var(--muted));font-size:13px}
+    .category-pill{display:inline-block;background: hsl(var(--secondary));padding:6px 10px;border-radius:999px;font-size:12px;color: hsl(var(--muted));margin-top:8px}
+    .arrow{transition:transform .22s ease; font-size:20px;}
+    .tip.open .arrow{transform:rotate(180deg)}
+    .content{padding:16px;border-top:1px solid hsl(var(--border));background:rgba(0,0,0,0.3); display:none;}
+    .tip.open .content{display:block;}
+    pre{white-space:pre-wrap;margin:12px 0;color: hsl(var(--muted));font-size:13px; background: hsl(var(--bg)); padding:12px; border-radius:6px;}
+    .commandments{margin-top:40px;background: hsl(var(--card));border:1px solid hsl(var(--border));padding:24px;border-radius:12px}
+    .commandments h3{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+    ul{padding-left:20px;margin:0;color: hsl(var(--muted))}
+    li{margin-bottom:10px}
+    nav{padding: 20px 0; border-bottom: 1px solid hsl(var(--border)); margin-bottom: 20px;}
+    nav .container{display: flex; justify-content: space-between; align-items: center;}
+    nav a{margin: 0 12px; font-size: 14px; color: hsl(var(--primary)); text-decoration: none;}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div><strong>Code.With.Laasya</strong></div>
+      <div>
+        <a href="home.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="errors.html">Error Logs</a>
+        <a href="videos.html">Videos</a>
+        <a href="ideas.html">Ideas</a>
+        <a href="tips.html">Tips</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div style="font-size:32px;color: hsl(var(--primary));margin-bottom:12px;">📚</div>
+      <h1>Code Survival Guide</h1>
+      <div class="subtitle">Tips & tricks I wish someone told me earlier</div>
+    </header>
+
+    <main>
+      <div class="list">
+        <!-- Tip 1 -->
+        <div class="tip">
+          <button class="tip-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="meta">
+              <h3>How to Read Error Logs Without Crying</h3>
+              <p>Master the art of understanding what went wrong</p>
+              <span class="category-pill">Debugging</span>
+            </div>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="content">
+            <pre>Step 1: Don't panic
+Step 2: Read the LAST line first (that's usually where the error is)
+Step 3: Google the error message (someone else has cried about this too)
+Step 4: Check your recent changes
+Step 5: Rubber duck debug it</pre>
+            <p style="color: hsl(var(--muted)); margin-top:12px;">Pro tip: Error messages are not personal attacks. They're just really bad at communication.</p>
+          </div>
+        </div>
+
+        <!-- Tip 2 -->
+        <div class="tip">
+          <button class="tip-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="meta">
+              <h3>Why Semicolons Save Relationships</h3>
+              <p>The importance of proper syntax</p>
+              <span class="category-pill">Best Practices</span>
+            </div>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="content">
+            <pre>// This works
+const love = true;
+const forever = true;
+
+// This is chaos
+const love = true
+const forever = false  // JavaScript assumed you meant this</pre>
+            <p style="color: hsl(var(--muted)); margin-top:12px;">Use a linter. Use Prettier. Use semicolons. Your future self will thank you.</p>
+          </div>
+        </div>
+
+        <!-- Tip 3 -->
+        <div class="tip">
+          <button class="tip-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="meta">
+              <h3>The Real Reason Your Code Isn't Working</h3>
+              <p>Spoiler: You forgot to breathe</p>
+              <span class="category-pill">Mental Health</span>
+            </div>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="content">
+            <p style="color: hsl(var(--muted));">Sometimes the bug isn't in your code. It's in your approach:</p>
+            <pre>1. Take a break
+2. Get water
+3. Walk around
+4. Come back with fresh eyes
+5. Realize you forgot a closing bracket</pre>
+            <p style="color: hsl(var(--muted)); margin-top:12px;">Your brain needs oxygen to function. Debugging requires a functioning brain. Math checks out.</p>
+          </div>
+        </div>
+
+        <!-- Tip 4 -->
+        <div class="tip">
+          <button class="tip-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="meta">
+              <h3>Console.log Is Your Best Friend</h3>
+              <p>Embrace the debugging classic</p>
+              <span class="category-pill">Debugging</span>
+            </div>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="content">
+            <pre>// Basic
+console.log('got here')
+
+// Better
+console.log('user data:', userData)
+
+// Best
+console.log('🔥 API Response:', { status, data, timestamp: Date.now() })</pre>
+            <p style="color: hsl(var(--muted)); margin-top:12px;">Yes, debuggers exist. But sometimes you just need to see what's actually happening.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commandments -->
+      <div class="commandments">
+        <h3><span style="font-size:24px;">⚡</span> The Sacred Rules of Coding</h3>
+        <ul>
+          <li>Commit early, commit often, push when it works</li>
+          <li>If it works, don't touch it (seriously, don't)</li>
+          <li>Comments are for you in 6 months when you forget everything</li>
+          <li>Stack Overflow is not cheating, it's research</li>
+          <li>Your first solution is rarely your best solution</li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

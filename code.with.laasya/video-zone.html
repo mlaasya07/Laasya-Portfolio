@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Video Zone — Short coding clips</title>
+  <style>
+    :root{
+      --bg:#061018;
+      --card:#0e1720;
+      --muted:#9aa7b2;
+      --text:#E6EEF3;
+      --primary:#96A13A;
+      --radius:12px;
+      font-family:"Roboto Mono", monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#041017);color:var(--text);padding:28px}
+    .container{max-width:1100px;margin:0 auto}
+    header{text-align:center;padding-bottom:22px}
+    h1{margin:0;font-size:40px}
+    .lead{color:var(--muted)}
+    .category{margin:34px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border-radius:12px;border:1px solid rgba(255,255,255,0.04);overflow:hidden;cursor:pointer;transition:transform .2s ease}
+    .card:hover{transform:translateY(-6px)}
+    .thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#111}
+    .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+    .card:hover .thumb img{transform:scale(1.05)}
+    .play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);opacity:0;transition:opacity .25s}
+    .card:hover .play-overlay{opacity:1}
+    .play-circle{width:56px;height:56px;border-radius:999px;background:var(--primary);display:flex;align-items:center;justify-content:center}
+    .play-triangle{width:0;height:0;border-left:14px solid #071009;border-top:9px solid transparent;border-bottom:9px solid transparent}
+    .duration{position:absolute;right:10px;bottom:8px;background:rgba(0,0,0,0.8);padding:6px 8px;border-radius:8px;font-size:12px}
+    .card-body{padding:12px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .tag{background:#1f252a;padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .center-note{margin-top:22px;padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);text-align:center;color:var(--muted)}
+    @media (max-width:520px){h1{font-size:28px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="font-size:28px;color:var(--primary);margin-bottom:6px;">🎞️</div>
+      <h1>Video Zone</h1>
+      <div class="lead">Short, cinematic clips documenting the coding journey</div>
+    </header>
+
+    <main>
+      <!-- Category: Learn With Me -->
+      <section class="category">
+        <h2 style="margin:0 0 6px">Learn With Me</h2>
+        <p style="margin:0 0 16px;color:var(--muted)">Mini coding lessons and tutorials</p>
+        <div class="grid">
+          <article class="card" onclick="openVideo('Array Methods You Actually Need', '8:45')">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&h=675&fit=crop" alt="">
+              <div class="play-overlay"><div class="play-circle"><div class="play-triangle"></div></div></div>
+              <div class="duration">8:45</div>
+            </div>
+            <div class="card-body">
+              <div style="font-weight:700">Array Methods You Actually Need</div>
+              <div class="tags"><span class="tag">JavaScript</span><span class="tag">Tutorial</span></div>
+            </div>
+          </article>
+
+          <article class="card" onclick="openVideo('CSS Grid Finally Made Sense', '12:30')">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=1200&h=675&fit=crop" alt="">
+              <div class="play-overlay"><div class="play-circle"><div class="play-triangle"></div></div></div>
+              <div class="duration">12:30</div>
+            </div>
+            <div class="card-body">
+              <div style="font-weight:700">CSS Grid Finally Made Sense</div>
+              <div class="tags"><span class="tag">CSS</span><span class="tag">Layout</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Category: Things I Built for Him -->
+      <section class="category">
+        <h2 style="margin:0 0 6px">Things I Built for Him</h2>
+        <p style="margin:0 0 16px;color:var(--muted)">Emotional coding journey reels</p>
+        <div class="grid">
+          <article class="card" onclick="openVideo('Building a Heartbreak Calculator', '5:20')">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1494548162494-384bba4ab999?w=1200&h=675&fit=crop" alt="">
+              <div class="play-overlay"><div class="play-circle"><div class="play-triangle"></div></div></div>
+              <div class="duration">5:20</div>
+            </div>
+            <div class="card-body">
+              <div style="font-weight:700">Building a Heartbreak Calculator</div>
+              <div class="tags"><span class="tag">React</span><span class="tag">Emotions</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Category: Random Chaos -->
+      <section class="category">
+        <h2 style="margin:0 0 6px">Random Chaos</h2>
+        <p style="margin:0 0 16px;color:var(--muted)">Funny experiments and coding shenanigans</p>
+        <div class="grid">
+          <article class="card" onclick="openVideo('Debugging at 3 AM: A Horror Story', '6:15')">
+            <div class="thumb">
+              <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=675&fit=crop" alt="">
+              <div class="play-overlay"><div class="play-circle"><div class="play-triangle"></div></div></div>
+              <div class="duration">6:15</div>
+            </div>
+            <div class="card-body">
+              <div style="font-weight:700">Debugging at 3 AM: A Horror Story</div>
+              <div class="tags"><span class="tag">Vlog</span><span class="tag">Humor</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="center-note">
+        More videos coming soon... currently editing the chaos.
+      </div>
+    </main>
+  </div>
+
+  <!-- lightweight modal player that just simulates opening a video -->
+  <div id="modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);z-index:60">
+    <div style="width:90%;max-width:900px;background:#071018;padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div id="modal-title" style="font-weight:700"></div>
+        <button onclick="closeModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:8px 10px;border-radius:8px;cursor:pointer">Close</button>
+      </div>
+      <div style="background:#000;height:420px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)">
+        <div id="video-sim" style="text-align:center">
+          <div style="font-size:48px">▶</div>
+          <div id="video-duration" style="margin-top:8px;color:var(--muted)"></div>
+          <div style="margin-top:12px;color:var(--muted)">This is a demo player (no real video)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openVideo(title, duration){
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('video-duration').textContent = duration;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal(){document.getElementById('modal').style.display = 'none'}
+  </script>
+</body>
+</html>

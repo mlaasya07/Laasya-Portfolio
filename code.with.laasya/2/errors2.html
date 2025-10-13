@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Error Logs — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: 0 0% 0%;
+      --card: 210 40% 6%;
+      --muted: 210 15% 65%;
+      --primary: 62 35% 43%;
+      --accent: 48 85% 55%;
+      --border: 0 0% 12%;
+      --secondary: 90 25% 17%;
+      --text: 0 0% 93%;
+      --destructive: 0 84% 60%;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background: hsl(var(--bg)); color: hsl(var(--text)); font-family:"Roboto Mono", monospace; line-height:1.5;}
+    .container{max-width:900px;margin:0 auto;padding:32px}
+    header{padding-top:120px;padding-bottom:24px;text-align:center}
+    h1{font-size:48px;margin:0 0 12px}
+    p.lead{color: hsl(var(--muted));font-size:18px;margin:0}
+    .error-list{margin:48px 0; display:flex; flex-direction:column; gap:20px;}
+    .error-card{background: hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:12px; overflow:hidden;}
+    .error-header{padding:20px; border-bottom:1px solid hsl(var(--border));}
+    .error-title{font-size:20px; font-weight:700; color: hsl(var(--destructive)); margin-bottom:8px;}
+    .error-meta{display:flex; gap:16px; font-size:13px; color: hsl(var(--muted));}
+    .error-body{padding:20px;}
+    .error-section{margin-bottom:20px;}
+    .error-section h3{font-size:14px; color: hsl(var(--primary)); margin-bottom:8px;}
+    .error-section p, .error-section pre{color: hsl(var(--muted)); font-size:13px; line-height:1.6;}
+    pre{background: hsl(var(--bg)); padding:12px; border-radius:6px; overflow-x:auto;}
+    .mood-meter{display:flex; gap:8px; align-items:center;}
+    .mood-icon{font-size:18px;}
+    .commandments{margin-top:40px; background: hsl(var(--card)); border:1px solid hsl(var(--border)); padding:24px; border-radius:12px;}
+    .commandments h2{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+    .commandments ul{padding-left:20px; color: hsl(var(--muted));}
+    .commandments li{margin-bottom:12px;}
+    nav{padding: 20px 0; border-bottom: 1px solid hsl(var(--border));}
+    nav .container{display: flex; justify-content: space-between; align-items: center;}
+    nav a{margin: 0 12px; font-size: 14px; color: hsl(var(--primary)); text-decoration: none;}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div><strong>Code.With.Laasya</strong></div>
+      <div>
+        <a href="home.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="errors.html">Error Logs</a>
+        <a href="videos.html">Videos</a>
+        <a href="ideas.html">Ideas</a>
+        <a href="tips.html">Tips</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>Error Logs</h1>
+      <p class="lead">Error Detected: Debug or Crashout?</p>
+    </header>
+
+    <main>
+      <div class="error-list">
+        <!-- Error Entry 1 -->
+        <article class="error-card">
+          <div class="error-header">
+            <h2 class="error-title">TypeError: Cannot read properties of undefined (me)</h2>
+            <div class="error-meta">
+              <span>📅 2024-01-15</span>
+              <div class="mood-meter">
+                <span>Mood:</span>
+                <span class="mood-icon">😐</span>
+                <span class="mood-icon">😟</span>
+                <span class="mood-icon">😭</span>
+              </div>
+            </div>
+          </div>
+          <div class="error-body">
+            <div class="error-section">
+              <h3>Context</h3>
+              <p>Happened during a late-night refactor when I thought I was being clever with optional chaining.</p>
+            </div>
+            <div class="error-section">
+              <h3>The Error</h3>
+              <pre>TypeError: Cannot read properties of undefined (reading 'user')
+  at Component.render (App.jsx:42:15)</pre>
+            </div>
+            <div class="error-section">
+              <h3>Thought Process</h3>
+              <p>Panic → checked docs → realized I forgot to initialize state → more panic → finally fixed it.</p>
+            </div>
+            <div class="error-section">
+              <h3>The Fix</h3>
+              <pre>// Before
+const { user } = this.state;
+
+// After
+const { user = {} } = this.state || {};</pre>
+            </div>
+            <div class="error-section">
+              <h3>What I Learned</h3>
+              <p>Always initialize your state. Coffee at 3 AM doesn't make you a better coder.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Error Entry 2 -->
+        <article class="error-card">
+          <div class="error-header">
+            <h2 class="error-title">Infinite Loop: My Code and My Life</h2>
+            <div class="error-meta">
+              <span>📅 2024-02-03</span>
+              <div class="mood-meter">
+                <span>Mood:</span>
+                <span class="mood-icon">😤</span>
+                <span class="mood-icon">🤯</span>
+              </div>
+            </div>
+          </div>
+          <div class="error-body">
+            <div class="error-section">
+              <h3>Context</h3>
+              <p>Created an infinite re-render loop in React. Browser froze. I froze. Everything froze.</p>
+            </div>
+            <div class="error-section">
+              <h3>The Fix</h3>
+              <p>Used useEffect with proper dependency array. Remembered to breathe.</p>
+            </div>
+            <div class="error-section">
+              <h3>What I Learned</h3>
+              <p>React's dependency arrays are not optional. Neither is self-care.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Commandments -->
+      <aside class="commandments">
+        <h2><span>⚡</span> Laasya's Debug Commandments</h2>
+        <ul>
+          <li><strong>I.</strong> Thou shalt not ignore console warnings.</li>
+          <li><strong>II.</strong> Thou shalt save before running.</li>
+          <li><strong>III.</strong> Thou shalt drink water while crying.</li>
+          <li><strong>IV.</strong> Thou shalt read the error message completely before panicking.</li>
+          <li><strong>V.</strong> Thou shalt commit often, push rarely, pray always.</li>
+        </ul>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

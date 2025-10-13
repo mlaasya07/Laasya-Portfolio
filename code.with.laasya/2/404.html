@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404 — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: 0 0% 0%;
+      --text: 0 0% 93%;
+      --primary: 62 35% 43%;
+      --accent: 48 85% 55%;
+      --muted: 210 15% 65%;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: hsl(var(--bg));
+      color: hsl(var(--text));
+      font-family:"Roboto Mono", monospace;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      text-align:center;
+      padding:20px;
+    }
+    h1{font-size:120px; margin:0; color: hsl(var(--primary));}
+    h2{font-size:32px; margin:12px 0;}
+    p{color: hsl(var(--muted)); font-size:16px; margin:12px 0;}
+    a{
+      display:inline-block;
+      margin-top:24px;
+      padding:12px 24px;
+      background: hsl(var(--primary));
+      color: hsl(90 25% 5%);
+      text-decoration:none;
+      border-radius:8px;
+      font-weight:700;
+      transition: background 0.2s;
+    }
+    a:hover{background: hsl(var(--accent));}
+  </style>
+</head>
+<body>
+  <div>
+    <h1>404</h1>
+    <h2>Error: Page Not Found</h2>
+    <p>Looks like this page doesn't exist. Much like my motivation at 3 AM.</p>
+    <a href="home.html">← Back to Safety</a>
+  </div>
+</body>
+</html>

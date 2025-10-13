@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./assets/heart-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code.With.Laasya</title>
+
+    <style>
+      body {
+        background: #000;
+        color: #e4cc37;
+        font-family: "Roboto Mono", monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+      .fade {
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Code.With.Laasya</h1>
+    <p style="font-size:14px; color:#888;">Loading your world of chaos & creativity…</p>
+
+    <script>
+      setTimeout(() => {
+        document.body.classList.add("fade");
+        setTimeout(() => (window.location.href = "Home.html"), 1000);
+      }, 3000);
+    </script>
+  </body>
+</html>
+

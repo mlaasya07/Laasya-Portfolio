@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Idea Journal — Code.With.Laasya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: 0 0% 0%;
+      --card: 210 40% 6%;
+      --muted: 210 15% 65%;
+      --primary: 62 35% 43%;
+      --accent: 48 85% 55%;
+      --border: 0 0% 12%;
+      --secondary: 90 25% 17%;
+      --text: 0 0% 93%;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background: hsl(var(--bg)); color: hsl(var(--text)); font-family:"Roboto Mono", monospace; line-height:1.5;}
+    .container{max-width:1100px;margin:0 auto;padding:32px}
+    header{padding-top:120px;padding-bottom:24px;text-align:center}
+    h1{font-size:48px;margin:0 0 12px}
+    p.lead{color: hsl(var(--muted));font-size:18px;margin:0}
+    .grid{display:grid; gap:24px; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); margin-top:40px}
+    .idea-card{background: hsl(var(--card)); border-radius:12px; overflow:hidden; border:1px solid hsl(var(--border)); transition:transform .2s}
+    .idea-card:hover{transform:translateY(-6px); border-color: hsl(var(--primary) / 0.5)}
+    .thumb{height:180px; background:#0a0c0e; overflow:hidden; display:flex; align-items:center; justify-content:center; color: hsl(var(--muted)); font-size:48px;}
+    .card-body{padding:20px}
+    .status{display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; font-size:12px; font-weight:600;}
+    .status.draft{background:rgba(255,255,255,0.05); color: hsl(var(--muted))}
+    .status.in-progress{background: hsl(var(--primary)); color: hsl(90 25% 5%)}
+    .status.completed{background: hsl(var(--secondary)); color:#fff}
+    .idea-title{font-size:20px; font-weight:700; margin:12px 0 8px;}
+    .idea-desc{color: hsl(var(--muted)); font-size:14px; margin-bottom:12px;}
+    .features{margin:12px 0;}
+    .feature{font-size:13px; color: hsl(var(--muted)); display:flex; gap:8px; margin-bottom:6px;}
+    .tools{margin-top:12px; display:flex; flex-wrap:wrap; gap:6px;}
+    .chip{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:12px; color: hsl(var(--muted));}
+    nav{padding: 20px 0; border-bottom: 1px solid hsl(var(--border));}
+    nav .container{display: flex; justify-content: space-between; align-items: center;}
+    nav a{margin: 0 12px; font-size: 14px; color: hsl(var(--primary)); text-decoration: none;}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div><strong>Code.With.Laasya</strong></div>
+      <div>
+        <a href="home.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="errors.html">Error Logs</a>
+        <a href="videos.html">Videos</a>
+        <a href="ideas.html">Ideas</a>
+        <a href="tips.html">Tips</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div style="font-size:32px; margin-bottom:12px;">💡</div>
+      <h1>Idea Journal</h1>
+      <p class="lead">Half-baked ideas and future projects living rent-free in my head</p>
+    </header>
+
+    <main>
+      <div class="grid">
+        <!-- Idea 1 -->
+        <article class="idea-card">
+          <div class="thumb">🎨</div>
+          <div class="card-body">
+            <span class="status in-progress">In Progress</span>
+            <h2 class="idea-title">Code Mood Tracker</h2>
+            <p class="idea-desc">An app that tracks your emotional state while coding and suggests music/breaks accordingly.</p>
+            <div class="features">
+              <div class="feature">✓ Mood detection via typing patterns</div>
+              <div class="feature">✓ Spotify integration</div>
+              <div class="feature">○ AI-powered suggestions</div>
+            </div>
+            <div class="tools">
+              <span class="chip">React</span>
+              <span class="chip">Python</span>
+              <span class="chip">ML</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Idea 2 -->
+        <article class="idea-card">
+          <div class="thumb">🔮</div>
+          <div class="card-body">
+            <span class="status draft">Draft</span>
+            <h2 class="idea-title">Bug Fortune Teller</h2>
+            <p class="idea-desc">Upload your code, get a mystical prediction about what will break in production.</p>
+            <div class="features">
+              <div class="feature">○ Code analysis</div>
+              <div class="feature">○ Sarcastic AI responses</div>
+              <div class="feature">○ Actual useful warnings</div>
+            </div>
+            <div class="tools">
+              <span class="chip">TypeScript</span>
+              <span class="chip">OpenAI</span>
+              <span class="chip">Humor</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Idea 3 -->
+        <article class="idea-card">
+          <div class="thumb">📝</div>
+          <div class="card-body">
+            <span class="status draft">Draft</span>
+            <h2 class="idea-title">Commit Message Poetry</h2>
+            <p class="idea-desc">Turn your boring commit messages into haikus or dramatic poetry.</p>
+            <div class="features">
+              <div class="feature">○ Git integration</div>
+              <div class="feature">○ Multiple poetry styles</div>
+              <div class="feature">○ Share on social media</div>
+            </div>
+            <div class="tools">
+              <span class="chip">Node.js</span>
+              <span class="chip">Git Hooks</span>
+              <span class="chip">NLP</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Idea 4 -->
+        <article class="idea-card">
+          <div class="thumb">🎮</div>
+          <div class="card-body">
+            <span class="status completed">Completed</span>
+            <h2 class="idea-title">ARCADE-X</h2>
+            <p class="idea-desc">Already built! Collection of nostalgic games.</p>
+            <div class="tools">
+              <span class="chip">JavaScript</span>
+              <span class="chip">Canvas</span>
+              <span class="chip">Nostalgia</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div style="margin-top:40px; text-align:center; padding:24px; background: hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:12px;">
+        <p style="color: hsl(var(--muted));">Got an idea? They all start somewhere. Mine start at 2 AM with too much coffee.</p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
