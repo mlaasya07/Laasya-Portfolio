@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <link rel="icon" href="assets/profilepicture.jpg"/>
+  <script src="https://kit.fontawesome.com/a2e0e6d47e.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <title>Laasya | Portfolio</title>
+
+  <!-- ============================= -->
+  <!--   GOOGLE FONTS IMPORT         -->
+  <!-- ============================= -->
+  <!-- "Playfair Display" resembles Atteron (elegant serif)
+       "Roboto Mono" for minimal modern text -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Mono&display=swap" rel="stylesheet">
+
+  <!-- ============================= -->
+  <!--          PAGE STYLES          -->
+  <!-- ============================= -->
+    <style>
+        /* ---- COLOR PALETTE ---- */
+:root {
+  --bg: #fff1b3;   /* background color */
+  --text: #993039; /* text color */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---- BASIC PAGE SETTINGS ---- */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Roboto Mono', monospace;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ---- SECTION BASE ---- */
+.section,
+.about,
+.projects,
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100vh;
+  padding: 4rem 1.5rem;
+}
+
+/* ---- MAIN TITLE ---- */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+
+}
+
+.cursor {
+  display: inline-block;
+  animation: blink 0.8s infinite;
+}
+
+/* Cursor blinking */
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* ---- HERO SECTION ---- */
+.hero {
+  background: var(--bg);
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  letter-spacing: 2px;
+  border-right: 3px solid var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+
+}
+
+/* ---- SUBTITLE ---- */
+.subtitle {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+  user-select: none;
+
+}
+
+/* Fade in */
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- NAVBAR ---- */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(255, 241, 179, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem 0;
+  z-index: 10;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #b34b55;
+}
+
+/* ---- ABOUT SECTION ---- */
+.about h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  user-select: none;
+
+}
+
+.about p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 800px;
+  text-align: center;
+  user-select: none;
+
+}
+
+/* ---- PROJECTS SECTION ---- */
+.projects h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  width: 80%;
+  max-width: 1000px;
+}
+
+.project-card {
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: left;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 10px 40px #993039;
+}
+
+.project-card h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bg);
+  margin-bottom: 0.5rem;
+  user-select: none;
+
+}
+.project-links a {
+  color: var(--bg);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+.project-links a:hover {
+  color: #b34b55;
+}
+
+/* ---- CONTACT SECTION ---- */
+.contact h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+.contact p {
+  max-width: 700px;
+  line-height: 1.6;
+  text-align: center;
+  user-select: none;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.contact-links a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.contact-links a:hover {
+  color: #b34b55;
+}
+
+/* ---- FOOTER ---- */
+footer {
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  opacity: 0.6;
+  user-select: none;
+}
+
+.icon-link { color: #993039; margin-right: 0.8rem; text-decoration: none; }
+.icon-link i { margin-right: 0.3rem; }
+.icon-link:hover { text-decoration: underline; }
+
+.icons {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    display: flex;
+    gap: 0.7rem;
+    opacity: 0;
+    transition: all 0.4s ease;
+    z-index: 10;
+}
+.icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.1rem;               /* Smaller icon size */
+    background: rgba(0, 0, 0, 0.6);  /* Dark circle bg */
+    border-radius: 50%;
+    width: 36px;                     /* fixed size */
+    height: 36px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================= -->
+  <!--            NAVBAR             -->
+  <!-- ============================= -->
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- ============================= -->
+  <!--        MAIN SECTION           -->
+  <!-- ============================= -->
+  <div class="section">
+    <!-- Main title with typewriter animation -->
+   <h1><span style="user-select: none;" class="typed" data-typed-items=" ♡ Laasya's , Portfolio ♡ "></span></h1>
+    <!-- Subtitle fades in when you scroll -->
+    <p class="subtitle" id="subTitle">
+      Creative Design • Branding • Storytelling
+    </p>
+  </div>
+    <!-- ============================= -->
+    <!--            ABOUT              -->
+    <!-- ============================= -->
+  <section class="about" id="about">
+    <h2>About Me</h2>
+    <p>
+      I'm a multidisciplinary designer and storyteller. My work explores the intersection
+      of visual identity, emotion, and narrative — creating experiences that speak to the soul.
+      Whether it’s crafting a brand, illustrating a concept, or bringing stories to life,
+      my approach blends elegance, clarity, and depth.
+    </p>
+  </section>
+
+  <!-- ============================= -->
+  <!--           PROJECTS            -->
+  <!-- ============================= -->
+  <section class="projects" id="projects">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h3>Project One</h3>
+        <p>A branding experiment that reimagines modern simplicity with emotional resonance.</p> <br>
+        <div class="project-links">
+          <a href="#">View Project</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <h3>Project Two</h3>
+        <p>Exploring the connection between narrative and motion — a digital story in form and flow.</p> <br>
+        <div class="project-links">
+          <a href="#">View Project</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <h3>Project Three</h3>
+        <p>A collaborative visual campaign that celebrates individuality through minimalist design.</p> <br>
+        <div class="project-links">
+          <a href="#">View Project</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <h3>Project Four</h3>
+        <p>An immersive brand identity project that fuses storytelling with striking visuals.</p> <br>
+        <div class="project-links">
+          <a href="#">View Project</a>
+        </div>
+      </div>
+
+    <div class="project-card">
+        <h3>Project Five</h3>
+        <p>A minimalist design approach to convey complex narratives through simple forms.</p> <br>
+        <div class="project-links">
+        <a href="#">View Project</a>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <h3>Project Six</h3>
+        <p>A visual storytelling project that combines motion graphics with emotional depth.</p> <br>
+        <div class="project-links">
+        <a href="#">View Project</a>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <h3>Project Seven</h3>
+        <p>A branding initiative that emphasizes clarity and emotional connection through design.</p> <br>
+        <div class="project-links">
+        <a href="#">View Project</a>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <h3>Project Eight</h3>
+        <p>An experimental design project that explores the boundaries of visual storytelling.</p> <br>
+        <div class="project-links">
+        <a href="#">View Project</a>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <h3>Project Nine</h3>
+        <p>A collaborative storytelling project that merges minimalist design with rich narratives.</p> <br>
+        <div class="project-links">
+        <a href="#">View Project</a>
+        </div>
+    </div>
+
+    </div>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!--            CONTACT            -->
+  <!-- ============================= -->
+  <section class="contact" id="contact">
+    <h2>Let’s Connect</h2>
+    <p>Have a project in mind, or just want to say hello? Reach out through the links below:</p>
+    <div class="contact-links">
+      <p>
+      <a class="icon-link" href="mailto:mlaasy16@gmail.com" style = "color: #993039"><i class="fas fa-envelope"></i>Email</a> |
+      <a class="icon-link" href="https://github.com/mlaasya07" target="_blank" style = "color: #993039"><i class="fab fa-github"></i>GitHub</a> |
+      <a class="icon-link" href="https://linkedin.com/in/mlaasya07" target="_blank" style = "color: #993039"><i class="fab fa-linkedin"></i>LinkedIn</a>
+    </p>
+    </div>
+  </section>
+  <!-- ============================= -->
+  <!--            FOOTER             -->
+  <!-- ============================= -->
+  <footer style="user-select: none;">
+    <strong>
+    © 2025 Laasya | Portfolio — All Rights Reserved <br>
+    Designed & Developed by Laasya <br>
+    Do NOT copy or use any part of this website without permission.</strong>
+  </footer>
+
+  <!-- ============================= -->
+  <!--           JAVASCRIPT          -->
+  <!-- ============================= -->
+  <script>
+    /*
+      This small script checks the scroll position.
+      When the subtitle is about to come into view,
+      it adds the "visible" class to trigger fade-in animation.
+    */
+    window.addEventListener('scroll', () => {
+      const subtitle = document.getElementById('subTitle');
+      const rect = subtitle.getBoundingClientRect();
+
+      // If the subtitle is within 100px of bottom of screen, fade it in
+      if (rect.top < window.innerHeight - 100) {
+        subtitle.classList.add('visible');
+      }
+    });
+  </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const typedElement = document.querySelector('.typed');
+    if (typedElement) {
+      new Typed('.typed', {
+        strings: typedElement.getAttribute('data-typed-items').split(','),
+        typeSpeed: 100,
+        backSpeed: 40,
+        backDelay: 2000,
+        loop: true,
+        smartBackspace: true,
+        showCursor: true,
+        cursorChar: '|'
+      });
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alysaa M — Student Developer Portfolio</title>
+
+  <!--
+    Fonts:
+    - Playfair Display used as an Atteron-like serif
+    - Roboto Mono used for body text (as requested)
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================
+       COLOR PALETTE & VARIABLES
+       ========================== */
+    :root{
+      --bg: #fff1b3;    /* background */
+      --text: #993039;  /* primary text color */
+      --muted: rgba(153,48,57,0.16);
+      --card-bg: #ffffff;
+      --max-width: 1200px;
+    }
+
+    /* ==========================
+       BASIC RESET & LAYOUT
+       ========================== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      background: var(--bg);
+      font-family: "Roboto Mono", monospace;
+      color: var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      overflow-x:hidden; /* prevent horizontal scroll */
+      scroll-behavior: smooth;
+    }
+
+    /* Page container centers content and limits width */
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* ==========================
+       SLIDE / SECTION STYLING
+       Each section is visually a 16:9 slide (aspect-ratio),
+       centered content, with a background image placeholder.
+       ========================== */
+    .slide {
+      width: 100%;
+      /* use aspect-ratio to maintain 16:9 look on most devices */
+      aspect-ratio: 16 / 9;
+      background-size: cover;
+      background-position: center;
+      border-radius: 12px;
+      margin: 2.4rem auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+
+    /* small translucent overlay so text remains readable */
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,241,179,0.04), rgba(255,241,179,0.04));
+      pointer-events: none;
+    }
+
+    /* internal layout inside each slide */
+    .slide .inner {
+      position: relative; /* sits above overlay */
+      z-index: 2;
+      width: min(92%, 1100px);
+      display: flex;
+      gap: 1.4rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Left/Right columns - used on slides with image + text */
+    .left {
+      flex: 1;
+      text-align: left;
+    }
+    .right {
+      width: 260px;
+      flex-shrink: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* portrait / image placeholder */
+    .portrait {
+      width: 220px;
+      height: 220px;
+      border-radius: 8px;
+      overflow:hidden;
+      background: linear-gradient(180deg,#eee,#ddd);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+
+    /* ==========================
+       TYPOGRAPHY
+       ========================== */
+    h1, h2, h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text);
+      font-family: "Playfair Display", serif;
+      line-height: 1.02;
+      letter-spacing: 1px;
+    }
+
+    /* Main title (big, uppercase-ish feel) */
+    .main-title {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      text-transform: uppercase;
+      letter-spacing: 6px;
+    }
+
+    /* Section heading */
+    .section-heading {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    /* small supporting text */
+    .lead {
+      font-size: clamp(0.95rem, 1.35vw, 1.05rem);
+      color: var(--text);
+      opacity: 0.95;
+      margin-top: 0.4rem;
+    }
+
+    /* projects grid (cards) */
+    .projects-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .card{
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 0.6rem;
+      box-shadow: 0 6px 18px rgba(153,48,57,0.05);
+      color: var(--text);
+      text-align:center;
+    }
+    .card img{ width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:0.6rem; }
+
+    /* small muted style for secondary text */
+    .muted { opacity: 0.78; font-size: 0.95rem; }
+
+    /* footer contacts */
+    .contacts {
+      display:flex;
+      gap: 2rem;
+      justify-content:space-between;
+      margin-top: 1.6rem;
+      flex-wrap:wrap;
+      font-size: 0.95rem;
+    }
+
+    /* ==========================
+       ANIMATIONS (scroll-triggered)
+       .anim elements start hidden and become visible when in view.
+       We use .anim + .inview class toggle (via IntersectionObserver).
+       ========================== */
+
+    .anim {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 700ms cubic-bezier(.2,.9,.3,1), transform 700ms cubic-bezier(.2,.9,.3,1);
+      will-change: opacity, transform;
+    }
+    .anim.inview {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================
+       TYPEWRITER STYLE (hero main title)
+       The title text will type in (width-based) and show a blinking cursor.
+       ========================== */
+    .typewrap {
+      display:inline-block;
+      white-space:nowrap;
+      overflow:hidden;
+      border-right: 3px solid var(--text); /* cursor */
+    }
+    /* we will animate width via JS for reliable handling of line breaks */
+    .typed { display:inline-block; }
+
+    /* caret blink animation when typing isn't active (applied by JS) */
+    .caret-blink { animation: caret 900ms steps(1) infinite; }
+    @keyframes caret { 50%{ border-color: transparent; } }
+
+    /* ==========================
+       RESPONSIVE ADJUSTMENTS
+       On narrower screens, stack columns and change aspect ratio a bit.
+       ========================== */
+    @media (max-width: 980px) {
+      .slide .inner { flex-direction: column; align-items: center; text-align:center; gap: 1rem; }
+      .left { max-width: 100%; }
+      .right { width: 140px; height: 140px; }
+      .portrait { width: 140px; height: 140px; }
+      .slide { aspect-ratio: 4 / 3; } /* avoid very short slides */
+    }
+
+    @media (max-width: 520px){
+      .main-title { font-size: 2rem; letter-spacing: 2px; }
+      .section-heading { font-size: 1.1rem; }
+      .page { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- =============================
+         HERO / MAIN TITLE SLIDE
+         - 16:9 background placeholder
+         - main title with typewriter (JS triggers typing once hero is in view)
+         - subtitle fades in on scroll
+         ============================= -->
+    <section class="slide" id="slide-hero"
+             style="background-image: url('https://via.placeholder.com/1600x900/efe0b3/ffffff?text=Slide+1+Background');">
+      <div class="inner">
+        <!-- center column -->
+        <div class="left" style="width:100%;text-align:center">
+          <!-- main title wrapper (typewriter) -->
+          <!-- .typewrap will hold the typed text element (.typed).
+               JS will insert content and animate typing. -->
+          <h1 class="main-title anim" id="heroTitle">
+            <span class="typewrap" id="typewrap"><span class="typed" id="typedText"></span></span>
+          </h1>
+
+          <!-- subtitle that fades-in when in view -->
+          <p class="lead anim" id="heroSub">Creative Designer • Student Developer • Storyteller</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================
+         SECTION: THE WORK I DO
+         - text on left, small portrait placeholder on right
+         - scroll-triggered animations
+         ============================= -->
+    <section class="slide" id="slide-work"
+             style="background-image: url('https://via.placeholder.com/1600x900/f6e9b7/ffffff?text=Slide+2+Background');">
+      <div class="inner">
+        <div class="left">
+          <h2 class="section-heading anim">The work I do</h2>
+          <p class="lead anim">I design user-focused systems and creative visual identities — blending research, empathy and a clear aesthetic language.</p>
+        </div>
+
+        <div class="right">
+          <div class="portrait anim" aria-hidden="true">
+            <!-- Replace placeholder with actual image file -->
+            <img src="https://via.placeholder.com/300x300/ddd/999?text=Portrait" alt="Portrait placeholder">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================
+         SECTION: MY CREDENTIALS
+         - similar structure
+         ============================= -->
+    <section class="slide" id="slide-creds"
+             style="background-image: url('https://via.placeholder.com/1600x900/f6e9b7/ffffff?text=Slide+3+Background');">
+      <div class="inner">
+        <div class="left">
+          <h2 class="section-heading anim">My credentials</h2>
+          <p class="lead anim">CR Rao AIMSCS 2023–2027 •<br> B.Tech (Data Science) •<br> Freelance design & dev work (2023–present)</p>
+        </div>
+
+        <div class="right">
+          <div class="portrait anim" aria-hidden="true">
+            <img src="https://via.placeholder.com/300x300/eee/777?text=Certificate" alt="credentials placeholder">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================
+         SECTION: PAST PROJECTS
+         - grid of project cards / thumbnails
+         ============================= -->
+    <section class="slide" id="slide-projects"
+             style="background-image: url('https://via.placeholder.com/1600x900/f6e9b7/ffffff?text=Slide+4+Background');">
+      <div class="inner" style="flex-direction:column;align-items:flex-start">
+        <div style="width:100%">
+          <h2 class="section-heading anim">Past projects</h2>
+          <p class="lead anim">A selection of recent work across product, visual identity, and interaction design.</p>
+
+          <div class="projects-grid" style="margin-top:1rem">
+            <div class="card anim">
+              <img src="https://via.placeholder.com/400x240/ffdcbf/993039?text=Project+1" alt="Project 1">
+              <div class="muted">PAGE-R — student productivity suite</div>
+            </div>
+
+            <div class="card anim">
+              <img src="https://via.placeholder.com/400x240/ffdcbf/993039?text=Project+2" alt="Project 2">
+              <div class="muted">Arcade-X — brand identity</div>
+            </div>
+
+            <div class="card anim">
+              <img src="https://via.placeholder.com/400x240/ffdcbf/993039?text=Project+3" alt="Project 3">
+              <div class="muted">Poetry Portfolio — visual design</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================
+         SECTION: CTA / BUILD WITH ME
+         - final message + photo
+         ============================= -->
+    <section class="slide" id="slide-cta"
+             style="background-image: url('https://via.placeholder.com/1600x900/f6e9b7/ffffff?text=Slide+5+Background');">
+      <div class="inner">
+        <div class="left">
+          <h2 class="section-heading anim">Let's build a world together</h2>
+          <p class="lead anim">Currently developing MedDex — a pocket medical toolkit for students and clinicians. I’m open to collaborations and conversations.</p>
+        </div>
+
+        <div class="right">
+          <div class="portrait anim" aria-hidden="true">
+            <img src="https://via.placeholder.com/300x300/ddd/999?text=Working+Photo" alt="working placeholder">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================
+         FOOTER / CONTACTS
+         - simple contact info row
+         ============================= -->
+    <footer style="margin-top:1.8rem">
+      <div class="contacts anim" id="contactsRow">
+        <div><strong>LinkedIn</strong><br><span class="muted">linkedin.com/in/laasya</span></div>
+        <div><strong>Github</strong><br><span class="muted">github.com/laasya</span></div>
+        <div><strong>Email</strong><br><span class="muted">hello@laasya.example</span></div>
+      </div>
+    </footer>
+
+  </div> <!-- end .page -->
+
+  <!-- =============================
+       JAVASCRIPT:
+       1) IntersectionObserver toggles .inview on .anim elements for scroll-triggered animations
+       2) Typewriter effect for the hero main title (only triggers once when hero enters)
+       Comments inline for clarity.
+       ============================= -->
+  <script>
+    /*****************************************************
+     * 1) Scroll-triggered animations using IntersectionObserver
+     *****************************************************/
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('inview');
+          // Unobserve if you don't want repeated callbacks
+          io.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.22 // element is considered in view when ~22% is visible
+    });
+
+    // observe all elements that should animate
+    document.querySelectorAll('.anim').forEach(el => io.observe(el));
+
+    /*****************************************************
+     * 2) Typewriter (hero main title)
+     * - We type multi-line text using <br> inserted when encountering '\n'
+     * - The typewrite is controlled by JS (more reliable than pure CSS width animation)
+     * - We also add a blinking caret class while typing
+     *****************************************************/
+    const typedTextEl = document.getElementById('typedText');
+    const typewrapEl = document.getElementById('typewrap');
+    const heroTitle = document.getElementById('heroTitle');
+
+    // The text we want typed (use '\n' to represent a line break)
+    const heroText = "LAASYA";
+
+    // Simple function to type the text into `typedTextEl`
+    function typeText(targetEl, text, speed = 40) {
+      let i = 0;
+      targetEl.textContent = ''; // ensure empty
+      targetEl.parentElement.classList.add('caret-blink'); // add caret blink during typing
+
+      const chars = Array.from(text); // split into characters
+      const id = setInterval(() => {
+        const ch = chars[i++];
+        if (ch === undefined) { // finished
+          clearInterval(id);
+          // remove caret blink after short delay
+          setTimeout(() => targetEl.parentElement.classList.remove('caret-blink'), 900);
+          return;
+        }
+        if (ch === '\n') {
+          // Insert a line break element
+          targetEl.appendChild(document.createElement('br'));
+        } else {
+          // Append character
+          // NOTE: We avoid direct innerHTML for safety and simplicity
+          targetEl.textContent = targetEl.textContent + ch;
+        }
+      }, speed);
+    }
+
+    // We want to start typing when the hero title enters view.
+    // Use a dedicated observer for the hero title to control typing precisely.
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Only type once
+          if (!heroTitle.dataset.typed) {
+            heroTitle.dataset.typed = 'true';
+            // small optional delay before typing
+            setTimeout(() => {
+              typeText(typedTextEl, heroText, 45);
+            }, 240);
+          }
+          heroObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    heroObserver.observe(heroTitle);
+
+    /*****************************************************
+     * Accessibility: If JS is disabled, we should provide readable fallback
+     * We can insert plain text fallback for the hero title to ensure content exists.
+     *****************************************************/
+    // Add a non-JS fallback text node (visible instantly) if desired:
+    (function addFallbackIfNoJs() {
+      // If JS runs, remove fallback (we'll keep JS typed text)
+      // But also add a visually-hidden fallback for screen readers
+      const srFallback = document.createElement('div');
+      srFallback.textContent = 'LAASYA';
+      srFallback.style.position = 'absolute';
+      srFallback.style.left = '-9999px';
+      srFallback.style.top = 'auto';
+      srFallback.style.width = '1px';
+      srFallback.style.height = '1px';
+      srFallback.style.overflow = 'hidden';
+      document.body.appendChild(srFallback);
+    })();
+  </script>
+</body>
+</html>
