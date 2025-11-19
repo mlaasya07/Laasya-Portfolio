@@ -618,6 +618,47 @@
   }
 }
 
+/* ──────────────── Substack Styles ──────────────── */
+.substack-card {
+  background: rgba(77, 184, 255, 0.08);
+  border: 1px solid #b32d59;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  transition: 0.3s ease;
+}
+
+.substack-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 18px #c74973;
+}
+
+.substack-title {
+  margin: 0 0 6px 0;
+  color: #f5427e;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.substack-date {
+  margin: 0;
+  color: #9cd8ff;
+  font-size: 0.9rem;
+}
+
+.substack-link {
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
+  color: #4db8ff;
+  font-weight: 600;
+  border-bottom: 1px dashed rgba(77,184,255,0);
+  transition: 0.2s;
+}
+
+.substack-link:hover {
+  border-bottom: 1px dashed #4db8ff;
+}
 
 
 </style>
@@ -1009,17 +1050,26 @@
   </section>
 
   <section id="bitverse">
-    <h2 style="text-align:center; font-size: 2.5rem; color: #4db8ff; margin-bottom: 2rem;">BitVerse - The Multiverse of Coding</h2>
+    <h2 style="text-align:center; font-size: 2.5rem; color: #4db8ff; margin-bottom: 2rem;">BitVerse - The Multiverse of Coding & Creative Thinking</h2>
+
+    <div class="game-card">
+      <h3>Latest on My Substack</h3>
+      <p style="margin-bottom: 1rem;">My recent thoughts, essays & AI chaos 🧠✨</p>
+    <div id="substack-posts">Loading posts...</div>
+    </div>
+
     <div class="game-card">
       <h3>GitHub Contribution Graph</h3>
       <p>This is how much code I’ve breathed into the universe 🌱</p>
       <p><a href="https://github.com/mlaasya07" target="_blank" style = "color: #4db8ff">View my GitHub profile</a></p>
       <div class="calendar">Loading contributions...</div>
     </div>
+
     <div class="game-card">
       <h3>LeetCode Stats</h3>
       <p><a href="https://leetcode.com/u/ydHg4pM34m/" target="_blank" style = "color: #4db8ff">View my LeetCode profile</a></p>
     </div>
+
     <div class="game-card">
       <h3>CodinGame Progress</h3>
       <p><a href="https://www.codingame.com/profile/1926e3967e6d68739783fc04eba77d9a5852966" target="_blank" style = "color: #4db8ff">Visit my CodinGame profile</a></p>
@@ -1052,6 +1102,16 @@ Birla Institute of Technology (BIT), Mesra, Ranchi </a></li>
     <p>
       <a class="icon-link" href="https://github.com/mlaasya07" target="_blank" style = "color: #4db8ff" ><i class="fab fa-github"></i> GitHub</a> |
       <a class="icon-link" href="https://linkedin.com/in/mlaasya07" target="_blank" style = "color: #4db8ff"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      <a class="icon-link" href="https://mlaasya07.substack.com" target="_blank" style="color: #4db8ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" 
+       style="margin-right: 4px; vertical-align: -2px;">
+        <rect width="24" height="24" rx="4" fill="#4db8ff"/>
+        <rect x="4" y="7" width="16" height="2.2" fill="white"/>
+        <rect x="4" y="11" width="16" height="2.2" fill="white"/>
+        <rect x="4" y="15" width="16" height="2.2" fill="white"/>
+      </svg>
+      Substack
+      </a>
     </p>
   </section>
 
@@ -1182,6 +1242,30 @@ Birla Institute of Technology (BIT), Mesra, Ranchi </a></li>
       });
     });
   });
+</script>
+
+<script>
+  async function loadSubstackPosts() {
+    const url = "https://api.rss2json.com/v1/api.json?rss_url=https://mlaasya07.substack.com/feed";
+    const res = await fetch(url);
+    const data = await res.json();
+    const posts = data.items.slice(0, 3);
+
+    let html = "";
+    posts.forEach(post => {
+      html += `
+        <div class="substack-card">
+          <h4 class="substack-title">${post.title}</h4>
+          <p class="substack-date">${new Date(post.pubDate).toDateString()}</p>
+          <a href="${post.link}" target="_blank" class="substack-link">Read →</a>
+        </div>
+      `;
+    });
+
+    document.getElementById("substack-posts").innerHTML = html;
+  }
+
+  loadSubstackPosts();
 </script>
 
 </body>
