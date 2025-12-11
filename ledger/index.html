@@ -126,10 +126,11 @@
         border-right: none;
     }
 
-    /* Color-coded statuses */
-    .status-paid { background: rgba(37, 140, 82, 0.18); }
-    .status-pending { background: rgba(181, 159, 59, 0.18); }
-    .status-overdue { background: rgba(168, 50, 50, 0.22); }
+/* Color-coded statuses */
+    .status-paid { background: #258c522e; }
+    .status-pending { background: #b59f3b2e; }
+    .status-overdue { background: #a8323238; }
+    .status-nottaken { background: #ff009d38; }
 
     /* Tag system */
     .tag {
@@ -246,6 +247,7 @@
             <th>S.Code</th>
             <th>Seeker</th>
             <th>Loan Amt</th>
+            <th>Date</th>
             <th>Due Date</th>
             <th>Margin</th>
             <th>P/L Amt</th>
@@ -338,59 +340,52 @@ function decodeText(text) {
    On initial render we will display ENCRYPTED values (except codes).
 ============================================================= */
 const ledgerData = [
-    {
-        loaner: "RAMESH",
-        seeker: "SURESH",
-        loanAmt: "₹50,000",
-        due: "12/01/2025",
-        margin: "12%",
-        pl: "₹6,000",
+     {
+        loaner: "LAASYA",
+        seeker: "ABHISHEK",
+        loanAmt: "₹2,000",
+        date: "04/12/2024",
+        due: "30/04/2025",
+        margin: "50%",
+        pl: "₹1,000",
         status: "Paid",
-        remarks: ["friend", "on-time"]
+        remarks: ["urgent", "delayed", "repeated checking needed"]
     },
-
     {
-        loaner: "ANITA",
-        seeker: "VIJAY",
-        loanAmt: "₹75,000",
-        due: "05/15/2025",
-        margin: "10%",
-        pl: "₹7,500",
-        status: "Overdue",
-        remarks: ["business"]
-    },
-
-    {
-        loaner: "KARAN",
-        seeker: "PRIYA",
-        loanAmt: "₹30,000",
-        due: "11/20/2025",
-        margin: "15%",
-        pl: "₹4,500",
-        status: "Pending",
-        remarks: ["family", "urgent"]
-    },
-
-    {
-        loaner: "KARAN",
-        seeker: "ANITA",
-        loanAmt: "₹100,000",
-        due: "08/30/2025",
-        margin: "8%",
-        pl: "₹8,000",
+        loaner: "LAASYA",
+        seeker: "GAYATRI",
+        loanAmt: "₹2,000",
+        date: "30/07/2025",
+        due: "14/08/2025",
+        margin: "25%",
+        pl: "₹2,500",
         status: "Paid",
-        remarks: ["long-term"]
+        remarks: ["personal", "paid on time", "urgent"]
     },
     {
-        loaner: "SURESH",
-        seeker: "VIJAY",
-        loanAmt: "₹60,000",
-        due: "09/10/2025",
-        margin: "11%",
-        pl: "₹6,600",
-        status: "Pending",
-        remarks: ["friend" ]
-    }
+        loaner: "LAASYA",
+        seeker: "SASANK",
+        loanAmt: "₹500",
+        date: "20/10/2024",
+        due: "20/03/2025",
+        margin: "0%",
+        pl: "₹0",
+        status: "Paid",
+        remarks: ["personal", "delayed", "ghosts", "urgent"]
+    },
+    {
+        loaner: "TEJAS",
+        seeker: "N/A",
+        loanAmt: "₹1,500",
+        date: "10/12/2025",
+        due: "-",
+        margin: "100%",
+        pl: "₹1500",
+        status: "Not Taken",
+        remarks: ["not taken yet"]
+    },
+
+    
 ];
 
 /* =============================================================
@@ -588,6 +583,7 @@ function renderTable(encrypted = true, animate = false) {
         const loanerText = encrypted ? encodeText(row.loaner) : row.loaner;
         const seekerText = encrypted ? encodeText(row.seeker) : row.seeker;
         const loanAmtText = encrypted ? encodeText(row.loanAmt) : row.loanAmt;
+        const date = encrypted ? encodeText(row.date) : row.date;
         const dueText = encrypted ? encodeText(row.due) : row.due;
         const marginText = encrypted ? encodeText(row.margin) : row.margin;
         const plText = encrypted ? encodeText(row.pl) : row.pl;
@@ -596,7 +592,7 @@ function renderTable(encrypted = true, animate = false) {
 
         // preserve color classes based on plaintext status
         const st = (row.status || "").toLowerCase();
-        const rowClass = (st === "paid") ? "status-paid" : (st === "pending") ? "status-pending" : (st === "overdue") ? "status-overdue" : "";
+        const rowClass = (st === "paid") ? "status-paid" : (st === "pending") ? "status-pending" : (st === "overdue") ? "status-overdue" : (st === "not taken") ? "status-nottaken" : "";
 
         return `<tr class="${rowClass}">
             <td data-col="loanerCode">${escapeHtml(displayLoanerCode)}</td>
@@ -604,6 +600,7 @@ function renderTable(encrypted = true, animate = false) {
             <td data-col="seekerCode">${escapeHtml(displaySeekerCode)}</td>
             <td data-col="seeker">${escapeHtml(seekerText)}</td>
             <td data-col="loanAmt">${escapeHtml(loanAmtText)}</td>
+            <td data-col="date">${escapeHtml(date)}</td>
             <td data-col="due">${escapeHtml(dueText)}</td>
             <td data-col="margin">${escapeHtml(marginText)}</td>
             <td data-col="pl">${escapeHtml(plText)}</td>
@@ -625,21 +622,23 @@ function renderTable(encrypted = true, animate = false) {
         const animCells = [];
         const animTargets = [];
 
-        // column index mapping: 0:L.Code (skip), 1:Loaner, 2:S.Code (skip), 3:Seeker, 4:LoanAmt,5:Due,6:Margin,7:PL,8:Status,9:Remarks
         newCells.forEach((cell, i) => {
             const col = cell.getAttribute("data-col");
-            if (col === "loanerCode" || col === "seekerCode") {
-                // do not animate codes; leave them as final
+
+            // Skip animating codes and remarks — leave those cells' HTML/content intact.
+            if (col === "loanerCode" || col === "seekerCode" || col === "remarks") {
                 return;
             }
-            // For remarks we will animate their innerText (tags produce elements). Use innerText to animate.
+
+            // For all other columns animate textContent as before
             animCells.push(cell);
-            // target value should be the text content (for tags it's the innerText)
             animTargets.push(cell.textContent);
+
             // set cell to previous visible content if available, else scrambled start
             const prevText = prevVisible[i] ?? scramble(String(cell.textContent), SCRAMBLE_POOL, new Set());
             cell.textContent = prevText;
         });
+
 
         // If there are animated cells, run whole-table animation
         if (animCells.length > 0) {
@@ -672,7 +671,7 @@ document.getElementById("searchBox").addEventListener("input", function () {
 ============================================================= */
 function exportCSV(encrypted = true) {
     const codes = computeCodes(ledgerData);
-    let csv = "LoanerCode,Loaner,SeekerCode,Seeker,LoanAmt,DueDate,Margin,PLAmt,Status,Remarks\n";
+    let csv = "LoanerCode,Loaner,SeekerCode,Seeker,LoanAmt,Date,DueDate,Margin,PLAmt,Status,Remarks\n";
     ledgerData.forEach((row, idx) => {
         const c = codes[idx];
         const lc = c.loanerCode; // codes are always plaintext in file/CSV
@@ -680,6 +679,7 @@ function exportCSV(encrypted = true) {
         const loaner = encrypted ? encodeText(row.loaner) : row.loaner;
         const seeker = encrypted ? encodeText(row.seeker) : row.seeker;
         const loanAmt = encrypted ? encodeText(row.loanAmt) : row.loanAmt;
+        const date = encrypted ? encodeText(row.date) : row.date;
         const due = encrypted ? encodeText(row.due) : row.due;
         const margin = encrypted ? encodeText(row.margin) : row.margin;
         const pl = encrypted ? encodeText(row.pl) : row.pl;
@@ -687,7 +687,7 @@ function exportCSV(encrypted = true) {
         const remarks = row.remarks.map(r => encrypted ? encodeText(r) : r).join(" ");
 
         const safe = v => `"${String(v).replace(/"/g, '""')}"`;
-        csv += [lc, loaner, sc, seeker, loanAmt, due, margin, pl, status, remarks].map(safe).join(",") + "\n";
+        csv += [lc, loaner, sc, seeker, loanAmt, date, due, margin, pl, status, remarks].map(safe).join(",") + "\n";
     });
 
     const blob = new Blob([csv], { type: "text/csv" });
