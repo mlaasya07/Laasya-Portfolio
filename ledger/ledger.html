@@ -126,9 +126,11 @@
 
 
     /* Color-coded statuses */
-    .status-paid { background: rgba(37, 140, 82, 0.18); }
-    .status-pending { background: rgba(181, 159, 59, 0.18); }
-    .status-overdue { background: rgba(168, 50, 50, 0.22); }
+    .status-paid { background: #258c522e; }
+    .status-pending { background: #b59f3b2e; }
+    .status-overdue { background: #a8323238; }
+    .status-nottaken { background: #ff009d38; }
+
 
     /* Tag system */
     .tag {
@@ -228,58 +230,28 @@ document.getElementById("unlockBtn").onclick = () => {
 ============================================================ */
 const ledgerData = [
     {
-        loaner: "RAMESH",
-        seeker: "SURESH",
-        loanAmt: "₹50,000",
+        loaner: "LAASYA",
+        seeker: "ABHISHEK",
+        loanAmt: "₹3,000",
         due: "12/01/2025",
-        margin: "12%",
-        pl: "₹6,000",
+        margin: "0%",
+        pl: "₹0",
         status: "Paid",
         remarks: ["friend", "on-time"]
     },
 
     {
-        loaner: "ANITA",
-        seeker: "VIJAY",
-        loanAmt: "₹75,000",
+        loaner: "TEJAS",
+        seeker: "N/A",
+        loanAmt: "₹1,500",
         due: "05/15/2025",
         margin: "10%",
         pl: "₹7,500",
-        status: "Overdue",
+        status: "Not Taken",
         remarks: ["business"]
     },
 
-    {
-        loaner: "KARAN",
-        seeker: "PRIYA",
-        loanAmt: "₹30,000",
-        due: "11/20/2025",
-        margin: "15%",
-        pl: "₹4,500",
-        status: "Pending",
-        remarks: ["family", "urgent"]
-    },
-
-    {
-        loaner: "KARAN",
-        seeker: "ANITA",
-        loanAmt: "₹100,000",
-        due: "08/30/2025",
-        margin: "8%",
-        pl: "₹8,000",
-        status: "Paid",
-        remarks: ["long-term"]
-    },
-    {
-        loaner: "SURESH",
-        seeker: "VIJAY",
-        loanAmt: "₹60,000",
-        due: "09/10/2025",
-        margin: "11%",
-        pl: "₹6,600",
-        status: "Pending",
-        remarks: ["friend" ]
-    }
+    
 ];
 
 
@@ -355,6 +327,7 @@ function renderTable() {
         if (row.status.toLowerCase() === "paid") tr.classList.add("status-paid");
         if (row.status.toLowerCase() === "pending") tr.classList.add("status-pending");
         if (row.status.toLowerCase() === "overdue") tr.classList.add("status-overdue");
+        if (row.status.toLowerCase() === "not taken") tr.classList.add("status-nottaken");
 
         tr.innerHTML = `
             <td>${loanerCode}</td>
