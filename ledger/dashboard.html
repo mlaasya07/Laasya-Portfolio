@@ -98,6 +98,7 @@
         background: var(--card);
         border-radius: 8px;
         overflow: hidden;
+        align-items: centre;
     }
 
     th, td {
@@ -211,12 +212,40 @@
     }
 
     /* subtle fade for table updates */
-    #ledgerTable { transition: opacity 220ms ease; }
+    #ledgerTable { transition: opacity 220ms ease; align-items: center; width: 100%;}
     #ledgerTable.dimmed { opacity: 0.6; }
+
+
+    /*Tab changing styles*/
+    .tab-container {
+        display: flex;
+        border-bottom: 4px solid #641200;
+        gap: 10px;
+        padding: 0 10px;
+    }
+    .tab-container:hover {
+        border-bottom:4px solid #ffe989;
+    }
+    .tab {
+        padding: 12px 20px;
+        border-radius: 8px 8px 0 0;
+        color: #ffe989;
+        text-decoration: none;
+    }
+    .tab:hover { 
+        background: #ffe989; color:#641200; }
+
+    
 </style>
 </head>
 
 <body>
+
+<!-- Tabs -->
+<div class="tab-container">
+    <a href="dashboard.html" class="tab">Dashboard</a>
+    <a href="reserve.html" class="tab active">Reserve</a>
+</div>
 
 <!-- PASSWORD LOCK -->
 <div id="lockScreen">
@@ -281,7 +310,7 @@
         </div>
     </div>
 </div>
-
+<script src="ledger.js"></script>
 <script>
 /* =============================================================
    CIPHER MAPPINGS (from your cipher.html)
@@ -334,59 +363,6 @@ function decodeText(text) {
     return out;
 }
 
-/* =============================================================
-   LEDGER DATA — YOU MANUALLY EDIT THESE ROWS (PLAINTEXT)
-   The data here is stored plaintext inside this file.
-   On initial render we will display ENCRYPTED values (except codes).
-============================================================= */
-const ledgerData = [
-     {
-        loaner: "LAASYA",
-        seeker: "ABHISHEK",
-        loanAmt: "₹2,000",
-        date: "04/12/2024",
-        due: "30/04/2025",
-        margin: "50%",
-        pl: "₹1,000",
-        status: "Paid",
-        remarks: ["urgent", "delayed", "repeated checking needed"]
-    },
-    {
-        loaner: "LAASYA",
-        seeker: "GAYATRI",
-        loanAmt: "₹2,000",
-        date: "30/07/2025",
-        due: "14/08/2025",
-        margin: "25%",
-        pl: "₹2,500",
-        status: "Paid",
-        remarks: ["personal", "paid on time", "urgent"]
-    },
-    {
-        loaner: "LAASYA",
-        seeker: "SASANK",
-        loanAmt: "₹500",
-        date: "20/10/2024",
-        due: "20/03/2025",
-        margin: "0%",
-        pl: "₹0",
-        status: "Paid",
-        remarks: ["personal", "delayed", "ghosts", "urgent"]
-    },
-    {
-        loaner: "TEJAS",
-        seeker: "N/A",
-        loanAmt: "₹1,500",
-        date: "10/12/2025",
-        due: "-",
-        margin: "100%",
-        pl: "₹1500",
-        status: "Not Taken",
-        remarks: ["not taken yet"]
-    },
-
-    
-];
 
 /* =============================================================
    Compute codes — deterministic fresh registry per render
@@ -782,6 +758,35 @@ document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "d" && document.getElementById("dashboard").style.display === "block") {
         decodeBtn.click();
     }
+});
+
+// for reserve.html 
+/* =============================================================
+   EXPORT LOANED + PROFIT TOTALS FOR RESERVE PAGE
+   - Runs automatically when dashboard unlocks
+   - Reads live ledgerData
+   - Saves totals in localStorage
+============================================================= */
+
+function exportReserveMeta() {
+    let totalLoaned = 0;
+    let totalProfit = 0;
+
+    ledgerData.forEach(row => {
+        const loan = parseInt(row.loanAmt.replace(/₹|,/g, "")) || 0;
+        const prof = parseInt(row.pl.replace(/₹|,/g, "")) || 0;
+
+        totalLoaned += loan;
+        totalProfit += prof;
+    });
+
+    const meta = { totalLoaned, totalProfit };
+    localStorage.setItem("reserveMeta", JSON.stringify(meta));
+}
+
+// Run this AFTER unlocking and rendering the dashboard
+document.getElementById("unlockBtn").addEventListener("click", () => {
+    setTimeout(exportReserveMeta, 100); 
 });
 
 /* =============================================================

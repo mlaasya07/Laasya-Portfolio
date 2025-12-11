@@ -1,38 +1,58 @@
-# Ledger
+# L-EDGER Dashboard
 
-A collection of tools and utilities for personal ledger management and data encryption.
+A comprehensive personal ledger management system with password protection, data visualization, and encryption utilities.
 
 ## Folder Structure
 
 ```
 ledger/
 ├── README.md           # This file
-├── ledger.html         # Password-protected ledger dashboard
+├── ledger.js           # Shared data and utility functions
+├── dashboard.html      # Main ledger dashboard (password-protected)
+├── reserve.html        # Reserve tracking & analytics dashboard with charts
 └── cipher.html         # Encoder/decoder utility for data encryption
 ```
 
 ## Contents
 
-### `ledger.html`
-A password-protected ledger dashboard with a dark, monospace interface. Features include:
+### `dashboard.html`
+The main password-protected ledger dashboard. Features include:
 - Secure password lock screen
-- Dark theme with custom color scheme
-- Monospace font styling (Roboto Mono)
-- Dashboard layout for ledger data management
+- Dark monospace interface (Roboto Mono)
+- Complete transaction table with filtering
+- Search functionality across all entries
+- Color-coded transaction statuses (Paid, Pending, Overdue)
+- Tag system for remarks and categorization
+- CSV export functionality
 
 **Color Scheme:**
 - Background: `#0d0d0d`
 - Cards: `#1a1a1a`
 - Accent Red: `#7c2323`
-- Accent Yellow: `#b59f3b`
-- Accent Green: `#258c52`
+- Text: `#eaeaea`
+
+### `reserve.html`
+Analytics and reserve tracking dashboard with visual data representation. Features include:
+- Tab-based interface for different views
+- Chart.js integration for data visualization
+- Loan summary statistics
+- Yellow text accent (`#ffe989`) for contrast
+- Shared data source from `ledger.js`
+- Grid-based card layout for organized information display
+
+**Key Colors:**
+- Background: `#0d0d0d`
+- Cards: `#1a1a1a`
+- Text: `#ffe989` (golden yellow)
+- Accent: `#7c2323`
 
 ### `cipher.html`
-An encoder/decoder utility for ledger data encryption. Features include:
+An encoder/decoder utility for secure text encryption/decryption:
 - Text encoding and decoding functionality
 - Red/maroon themed interface (`#7c2323`)
 - Gradient background with glass-morphism effects
 - Responsive design with max-width container
+- Useful for securing sensitive ledger notes or data
 
 ## Usage
 
