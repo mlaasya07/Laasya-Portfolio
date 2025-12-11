@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vintage Filing Drawer — Interactive Tabs</title>
+
+<!-- Fonts: serif for body, mono for typewriter feel, sans for labels -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Roboto+Mono:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+<style>
+  /* -------------------------
+     DESIGN TOKENS (change me)
+     ------------------------- */
+  :root{
+    /* color palette */
+    --bg: #eef0ef;            /* page background */
+    --paper: #fffefb;         /* page / card surface */
+    --ink: #0b0b0b;           /* main ink (text) */
+    --line: #000000;         /* hard border/ink */
+    --label-bg: #0b0b0b;     /* black label block */
+    --label-fg: #ffffff;     /* label text color */
+    --muted: #6b6b6b;        /* small type */
+    --shadow: rgba(0,0,0,0.18);
+
+    /* layout tokens */
+    --drawer-width: 760px;
+    --tab-height: 64px;     /* visual height of each card */
+    --tab-offset-x: 36px;   /* horizontal stagger per tab */
+    --tab-vertical-overlap: -20px; /* overlap to create stacked look */
+
+    /* fonts */
+    --font-body: "Playfair Display", serif; /* classic bookish serif */
+    --font-mono: "Roboto Mono", monospace;   /* typewriter-like */
+    --font-label: "Montserrat", sans-serif;  /* label caps */
+  }
+
+  /* -------------------------
+     BASE
+     ------------------------- */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:32px;
+    background:var(--bg);
+    font-family:var(--font-body);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:24px;
+  }
+
+
+  /* -------------------------
+     DRAWER / STACK
+     ------------------------- */
+  .drawer {
+    width: var(--drawer-width);
+    max-width: calc(100vw - 80px);
+    padding: 28px 28px 36px 28px;
+    background: linear-gradient(180deg,var(--paper), #f7f7f5);
+    border: 2px solid var(--line);
+    box-shadow: 0 8px 24px var(--shadow);
+    position: relative;
+    overflow: visible;
+  }
+
+  .drawer-title {
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--muted);
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+
+  /* container for the stack (so we can use z-index ordering) */
+  .stack {
+    position: relative;
+    padding-left: 110px; /* room for label blocks */
+  }
+
+  /* each tab is a clickable card */
+  .tab {
+    --idx:0; /* overwritten by JS for niceties if needed */
+    display:block;
+    position: relative;
+    text-decoration: none;
+    color:var(--ink);
+    background:var(--paper);
+    border: 1.6px solid var(--line);
+    height: var(--tab-height);
+    margin-top: var(--tab-vertical-overlap);
+    padding: 12px 18px 12px 18px;
+    transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 200ms;
+    transform-origin: left center;
+    overflow: visible;
+    z-index: 1;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.04);
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  /* stagger horizontally by nth-child */
+  .stack .tab:nth-child(1)  { transform: translateX(calc(var(--tab-offset-x) * 0 )); }
+  .stack .tab:nth-child(2)  { transform: translateX(calc(var(--tab-offset-x) * 1 )); }
+  .stack .tab:nth-child(3)  { transform: translateX(calc(var(--tab-offset-x) * 2 )); }
+  .stack .tab:nth-child(4)  { transform: translateX(calc(var(--tab-offset-x) * 3 )); }
+  .stack .tab:nth-child(5)  { transform: translateX(calc(var(--tab-offset-x) * 4 )); }
+  .stack .tab:nth-child(6)  { transform: translateX(calc(var(--tab-offset-x) * 5 )); }
+  .stack .tab:nth-child(7)  { transform: translateX(calc(var(--tab-offset-x) * 6 )); }
+  .stack .tab:nth-child(8)  { transform: translateX(calc(var(--tab-offset-x) * 7 )); }
+  .stack .tab:nth-child(9)  { transform: translateX(calc(var(--tab-offset-x) * 8 )); }
+  .stack .tab:nth-child(10) { transform: translateX(calc(var(--tab-offset-x) * 9 )); }
+
+  /* stylized "cut" look (left corner clipped) using pseudo-element */
+  .tab::before{
+    content:"";
+    position:absolute;
+    left:-8px;
+    top:0;
+    width:120px; height:100%;
+    pointer-events:none;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.02) 0 2px, transparent 2px);
+    clip-path: polygon(0 0, 88% 0, 82% 12%, 72% 22%, 58% 36%, 46% 48%, 36% 66%, 20% 86%, 0 86%);
+    /* gives it that geometric cut-in look */
+    opacity:0.95;
+    z-index:0;
+  }
+
+  /* label block that sits outside on the left — heavy black block with white text */
+  .tab .label {
+    position:absolute;
+    left:-110px;
+    top: 50%;
+    transform: translateY(-50%);
+    width:92px;
+    height:34px;
+    background:var(--label-bg);
+    color:var(--label-fg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-label);
+    font-weight:700;
+    letter-spacing:1px;
+    border: 2px solid var(--line);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    text-transform:uppercase;
+    z-index:3;
+  }
+
+  /* a small white inner label to capture the vintage white-on-black rectangle (like the scan) */
+  .tab .label small {
+    display:block; font-size:11px; font-weight:700;
+  }
+
+  /* content area: mimic typewriter / tight spacing */
+  .tab .meta {
+    font-family: var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .tab .title {
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink);
+    letter-spacing: .2px;
+  }
+
+  /* small "index number" on the right like the figure */
+  .tab .index {
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:12px;
+    padding:4px 8px;
+    border-left: 1px dashed rgba(0,0,0,0.08);
+    color:var(--muted);
+  }
+
+  /* hovered tab: pull up, darker border, increase z so it sits above others */
+  .tab:hover {
+    transform: translateY(-8px) scale(1.01);
+    z-index: 50;
+    box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+  }
+
+  /* THE MAGIC: when hovering a tab, shift all following siblings down */
+  /* Note: CSS sibling selector (.tab:hover ~ .tab) affects only later siblings (below in the visual stack).
+     We also use increasing translateY for stronger visual peek */
+  .tab:hover ~ .tab {
+    transform: translateY(28px) translateX(var(--last-x)) !important;
+    transition: transform 280ms cubic-bezier(.25,.9,.35,1);
+    z-index: 2;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  }
+
+  /* to keep the horizontal stagger when siblings are pushed down, we store their original translateX as a CSS var using inline style (JS fills it) */
+  /* fallback: small adjustment to ensure nth-child x offset remains visible */
+  .tab[data-x] { transform: translateX(var(--dx,0)); }
+
+  /* accessibility: focus styles */
+  .tab:focus { outline:3px solid rgba(0,120,255,0.12); transform: translateY(-8px) scale(1.01); z-index:60; }
+
+  /* small responsive tweak */
+  @media (max-width:880px){
+    :root{ --drawer-width:calc(100vw - 64px); --tab-offset-x:26px; --tab-height:62px }
+    .drawer { padding-left:18px; padding-right:18px }
+    .stack { padding-left:92px; }
+    .tab .label { left:-92px; width:76px; height:30px; font-size:12px; }
+  }
+</style>
+</head>
+<body>
+    <div class="stack" id="stack">
+      <!-- Replace href/data-target with your target URLs (games, articles, etc.) -->
+      <a class="tab" href="page1.html" data-id="1" aria-label="G index" data-target="page1.html">
+        <div class="label"><small>G</small></div>
+        <div>
+          <div class="meta">Gem 165</div>
+          <div class="title">General Motors Corp. — Nov./Dec.</div>
+        </div>
+        <div class="index">165</div>
+      </a>
+
+      <a class="tab" href="page2.html" data-id="2" aria-label="Ge index" data-target="page2.html">
+        <div class="label"><small>Ge</small></div>
+        <div>
+          <div class="meta">Ge 163</div>
+          <div class="title">Gehrich Corp. / Gear Fabricators</div>
+        </div>
+        <div class="index">163</div>
+      </a>
+
+      <a class="tab" href="page3.html" data-id="3" aria-label="Gei index" data-target="page3.html">
+        <div class="label"><small>Gei</small></div>
+        <div>
+          <div class="meta">Gei 164</div>
+          <div class="title">Gelvin, Ray / Gelatin Products Co.</div>
+        </div>
+        <div class="index">164</div>
+      </a>
+
+      <a class="tab" href="page4.html" data-id="4" aria-label="Gar index" data-target="page4.html">
+        <div class="label"><small>Gar</small></div>
+        <div>
+          <div class="meta">Gar 162</div>
+          <div class="title">Garrison Mfg. / Garage Supply Corp.</div>
+        </div>
+        <div class="index">162</div>
+      </a>
+
+      <a class="tab" href="page5.html" data-id="5" aria-label="Gem index" data-target="page5.html">
+        <div class="label"><small>Gem</small></div>
+        <div>
+          <div class="meta">Gem 165</div>
+          <div class="title">General Cigar Co. / Gem Felt Products</div>
+        </div>
+        <div class="index">165</div>
+      </a>
+
+      <!-- add more tabs as needed -->
+    </div>
+  </div>
+
+<script>
+/* ------------------------------
+   Small JS to preserve horizontal offset while using transform for hover shift.
+   We read each tab's computed translateX and store it as --dx, and also expose it as data-x
+   so that when CSS uses translateX(var(--dx)) it stays consistent after hover pushes.
+   ------------------------------ */
+(function initStack(){
+  const tabs = Array.from(document.querySelectorAll('.stack .tab'));
+  const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tab-offset-x')) || 36;
+
+  tabs.forEach((tab,i)=>{
+    // compute the X offset used in CSS nth-child (same math as in CSS)
+    const dx = (offset * i) + 'px';
+    tab.style.setProperty('--dx', `translateX(${dx})`); // store as translateX(...) to be placed directly
+    // but many transforms are already applied; to simplify, store numeric in data for fallback
+    tab.dataset.dxNum = (offset * i);
+
+    // Also set a CSS variable we referenced in the hover rule for compatibility:
+    // we want .tab:hover ~ .tab to keep the original X; CSS alone will overwrite transform,
+    // so we keep this backup value in a custom property used in the sibling rule.
+    tab.style.setProperty('--last-x', `translateX(${dx})`);
+  });
+
+  // Because CSS sibling selector can't compose multiple transforms gracefully,
+  // we patch sibling hover behaviour via JS to produce a smooth "drop down" on hover.
+  const stack = document.getElementById('stack');
+
+  stack.addEventListener('mouseover', (e)=>{
+    const hovered = e.target.closest('.tab');
+    if(!hovered) return;
+    const all = tabs;
+    const idx = all.indexOf(hovered);
+    all.forEach((t,i)=>{
+      if(i <= idx){
+        // keep their original translateX, but the hovered tab lifts via CSS
+        t.style.transform = `translateX(${t.dataset.dxNum}px)`;
+        t.style.zIndex = (i === idx) ? 60 : (100 - i);
+      }else{
+        // tabs below should drop down and preserve their X offset
+        t.style.transform = `translateX(${t.dataset.dxNum}px) translateY(28px)`;
+        t.style.zIndex = 20;
+      }
+    });
+  });
+
+  stack.addEventListener('mouseout', (e)=>{
+    // reset transforms
+    tabs.forEach((t,i)=>{
+      t.style.transform = `translateX(${t.dataset.dxNum}px)`;
+      t.style.zIndex = (100 - i);
+    });
+  });
+
+  // initialize base positions
+  tabs.forEach((t,i)=>{
+    t.style.transform = `translateX(${t.dataset.dxNum}px)`;
+    t.style.zIndex = (100 - i);
+  });
+
+  // optional: keyboard navigation (Enter opens href)
+  stack.addEventListener('keydown', (ev)=>{
+    const t = ev.target.closest('.tab');
+    if(!t) return;
+    if(ev.key === 'Enter' || ev.key === ' '){
+      ev.preventDefault();
+      const href = t.getAttribute('href') || t.dataset.target;
+      if(href) location.href = href;
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

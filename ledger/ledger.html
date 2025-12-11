@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ledger Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #0d0d0d;
+        --card: #1a1a1a;
+        --text: #eaeaea;
+        --accent: #7c2323;
+        --border: #333;
+        --yellow: #b59f3b;
+        --green: #258c52;
+        --red: #a83232;
+        font-family: "Roboto Mono", monospace;
+        color-scheme: dark;
+    }
+
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Roboto Mono", monospace;
+    }
+
+    /* Password Lock Screen */
+    #lockScreen {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 14px;
+        z-index: 9999;
+        user-select: none;
+    }
+
+    #lockScreen input {
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--red);
+        background: #111;
+        color: var(--red);
+        width: 220px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    #lockScreen button {
+        padding: 9px 16px;
+        background: var(--accent);
+        color: white;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .wrap {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: var(--accent);
+        user-select: none;
+    }
+
+    /* Search Bar */
+    #searchBox {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #111;
+        color: var(--text);
+        font-size: 14px;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #710616;
+        font-size: 13px;
+        text-align: center;      /* NEW */
+        vertical-align: middle;  /* NEW */
+    }
+
+    th {
+        background: #0f0f0f;
+        color: var(--accent);
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    td, th 
+    {
+    border-right: 1px solid #710616; /* vertical separators */
+    }
+
+    tr td:last-child,
+    tr th:last-child 
+    {
+        border-right: none; /* remove last column border for clean look */
+    }
+
+
+    /* Color-coded statuses */
+    .status-paid { background: rgba(37, 140, 82, 0.18); }
+    .status-pending { background: rgba(181, 159, 59, 0.18); }
+    .status-overdue { background: rgba(168, 50, 50, 0.22); }
+
+    /* Tag system */
+    .tag {
+        display: inline-block;
+        padding: 3px 8px;
+        margin-right: 4px;
+        margin-bottom: 2px;
+        background: #000;
+        border: 1px solid #444;
+        border-radius: 5px;
+        font-size: 11px;
+    }
+
+    /* Footer */
+    footer {
+        margin-top: 22px;
+        display: flex;
+        justify-content: flex-end;
+        user-select: none;
+    }
+
+    #exportCSV {
+        padding: 8px 14px;
+        background: var(--accent);
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD LOCK -->
+<div id="lockScreen">
+    <h2 style="color:var(--accent); user-select: none;">Enter Password</h2>
+    <input type="password" id="passwordInput" placeholder="Password">
+    <button id="unlockBtn">Unlock</button>
+</div>
+
+<div class="wrap" style="display:none;" id="dashboard">
+    <h1>Ledger Dashboard
+        <button id="exportCSV" style="margin-left:20px;">Export CSV</button>
+    </h1>
+
+    <input type="text" id="searchBox" placeholder="Search anything...">
+
+    <table id="ledgerTable">
+        <thead>
+        <tr>
+            <th>L.Code</th>
+            <th>Loaner</th>
+            <th>S.Code</th>
+            <th>Seeker</th>
+            <th>Loan Amt</th>
+            <th>Due Date</th>
+            <th>Margin</th>
+            <th>P/L Amt</th>
+            <th>Status</th>
+            <th>Remarks</th>
+        </tr>
+        </thead>
+
+
+        <tbody id="tableBody">
+            <!-- SAMPLE ROW (YOU CAN DUPLICATE IN JS) -->
+        </tbody>
+    </table>
+
+    <footer>
+        <p style="font-size:12px; color:var(--text); opacity:0.6;">
+            &copy; 2025 Ledger Dashboard | Made for Latte |
+            <a href="cipher.html" style="color:var(--text); text-decoration:none;">Cipher</a>
+        </p>
+    </footer>
+</div>
+
+<script>
+/* ============================================================
+   PASSWORD LOCK
+============================================================ */
+document.getElementById("unlockBtn").onclick = () => {
+    const p = document.getElementById("passwordInput").value.trim();
+    if (p === "latte1316") {
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+    } else {
+        alert("Incorrect password.");
+    }
+};
+
+
+/* ============================================================
+   LEDGER DATA — YOU MANUALLY EDIT THESE ROWS
+============================================================ */
+const ledgerData = [
+    {
+        loaner: "RAMESH",
+        seeker: "SURESH",
+        loanAmt: "₹50,000",
+        due: "12/01/2025",
+        margin: "12%",
+        pl: "₹6,000",
+        status: "Paid",
+        remarks: ["friend", "on-time"]
+    },
+
+    {
+        loaner: "ANITA",
+        seeker: "VIJAY",
+        loanAmt: "₹75,000",
+        due: "05/15/2025",
+        margin: "10%",
+        pl: "₹7,500",
+        status: "Overdue",
+        remarks: ["business"]
+    },
+
+    {
+        loaner: "KARAN",
+        seeker: "PRIYA",
+        loanAmt: "₹30,000",
+        due: "11/20/2025",
+        margin: "15%",
+        pl: "₹4,500",
+        status: "Pending",
+        remarks: ["family", "urgent"]
+    },
+
+    {
+        loaner: "KARAN",
+        seeker: "ANITA",
+        loanAmt: "₹100,000",
+        due: "08/30/2025",
+        margin: "8%",
+        pl: "₹8,000",
+        status: "Paid",
+        remarks: ["long-term"]
+    },
+    {
+        loaner: "SURESH",
+        seeker: "VIJAY",
+        loanAmt: "₹60,000",
+        due: "09/10/2025",
+        margin: "11%",
+        pl: "₹6,600",
+        status: "Pending",
+        remarks: ["friend" ]
+    }
+];
+
+
+/* ============================================================
+   ROLE-CODE ENGINE (FINAL LOGIC)
+============================================================ */
+
+const registry = {};  
+// registry[name] = { number: "01", lastRole: "L" or "S" }
+
+/* Generate permanent 2-digit number */
+function getNumber(name) {
+    if (!registry[name]) {
+        const next = String(Object.keys(registry).length + 1).padStart(2, "0");
+        registry[name] = { number: next, lastRole: null };
+    }
+    return registry[name].number;
+}
+
+/* Compute the code based on role transitions */
+function getRoleCode(name, currentRole) {
+    const person = registry[name];
+    const num = person.number;
+
+    // First time
+    if (!person.lastRole) {
+        person.lastRole = currentRole;
+        return currentRole + num; // L01 or S01
+    }
+
+    // Same role as before
+    if (person.lastRole === currentRole) {
+        return currentRole + num;
+    }
+
+    // Transition
+    if (person.lastRole === "L" && currentRole === "S") {
+        person.lastRole = "S";
+        return "LS" + num;
+    }
+
+    if (person.lastRole === "S" && currentRole === "L") {
+        person.lastRole = "L";
+        return "SL" + num;
+    }
+
+    return currentRole + num; // fallback
+}
+
+
+/* ============================================================
+   RENDER TABLE
+============================================================ */
+function renderTable() {
+    const body = document.getElementById("tableBody");
+    body.innerHTML = "";
+
+    ledgerData.forEach(row => {
+        const loaner = row.loaner.trim();
+        const seeker = row.seeker.trim();
+
+        // Register persons
+        getNumber(loaner);
+        getNumber(seeker);
+
+        // Compute codes
+        const loanerCode = getRoleCode(loaner, "L");
+        const seekerCode = getRoleCode(seeker, "S");
+
+        // Row UI
+        const tr = document.createElement("tr");
+
+        if (row.status.toLowerCase() === "paid") tr.classList.add("status-paid");
+        if (row.status.toLowerCase() === "pending") tr.classList.add("status-pending");
+        if (row.status.toLowerCase() === "overdue") tr.classList.add("status-overdue");
+
+        tr.innerHTML = `
+            <td>${loanerCode}</td>
+            <td>${loaner}</td>
+            <td>${seekerCode}</td>
+            <td>${seeker}</td>
+            <td>${row.loanAmt}</td>
+            <td>${row.due}</td>
+            <td>${row.margin}</td>
+            <td>${row.pl}</td>
+            <td>${row.status}</td>
+            <td>${row.remarks.map(t => `<span class='tag'>${t}</span>`).join("")}</td>
+        `;
+
+        body.appendChild(tr);
+    });
+}
+
+renderTable();
+
+
+/* ============================================================
+   SEARCH FILTER
+============================================================ */
+document.getElementById("searchBox").addEventListener("input", function () {
+    const q = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(r => {
+        r.style.display = r.innerText.toLowerCase().includes(q) ? "" : "none";
+    });
+});
+
+
+/* ============================================================
+   EXPORT CSV
+============================================================ */
+document.getElementById("exportCSV").onclick = () => {
+
+    // fresh registry for CSV consistency
+    const temp = {};
+
+    function tempNum(name) {
+        if (!temp[name]) {
+            const next = String(Object.keys(temp).length + 1).padStart(2, "0");
+            temp[name] = { number: next, lastRole: null };
+        }
+        return temp[name].number;
+    }
+
+    function tempCode(name, role) {
+        const person = temp[name];
+        const num = person.number;
+
+        if (!person.lastRole) {
+            person.lastRole = role;
+            return role + num;
+        }
+
+        if (person.lastRole === role) {
+            return role + num;
+        }
+
+        if (person.lastRole === "L" && role === "S") {
+            person.lastRole = "S";
+            return "LS" + num;
+        }
+
+        if (person.lastRole === "S" && role === "L") {
+            person.lastRole = "L";
+            return "SL" + num;
+        }
+
+        return role + num;
+    }
+
+    let csv = "LoanerCode,Loaner,SeekerCode,Seeker,LoanAmt,DueDate,Margin,PLAmt,Status,Remarks\n";
+
+    ledgerData.forEach(row => {
+        tempNum(row.loaner);
+        tempNum(row.seeker);
+
+        const lc = tempCode(row.loaner, "L");
+        const sc = tempCode(row.seeker, "S");
+
+        csv += `${lc},${row.loaner},${sc},${row.seeker},${row.loanAmt},${row.due},${row.margin},${row.pl},${row.status},"${row.remarks.join(" ")}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ledger.csv";
+    a.click();
+};
+
+</script>
+
+
+</body>
+</html>
+    

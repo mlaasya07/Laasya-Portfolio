@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucid Notes</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* --- Global Styles --- */
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family:'Roboto Mono', monospace; background-color:#FDF6F0; color:#000000; line-height:1.5; }
+a { text-decoration:none; color:inherit; }
+
+/* --- Navbar --- */
+nav {
+  width:100%;
+  background-color:#FFFFFF;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:1rem 0;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+  position:sticky;
+  top:0;
+  z-index:100;
+  font-family:'Roboto Mono', monospace;
+}
+nav a {
+  padding:0.5rem 1rem;
+  font-weight:700;
+  color:#000000;
+  transition: color 0.3s;
+}
+nav a:hover { color:#D8A7B1; }
+
+/* --- Headings --- */
+h1,h2,h3,h4 { font-family:'Playfair Display', serif; margin-bottom:1rem; }
+
+/* --- Container --- */
+.container { width:90%; max-width:1200px; margin:2rem auto; }
+
+/* --- Masonry Grid (Secret Wall) --- */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(250px,1fr));
+  gap:1.5rem;
+}
+.card {
+  background-color:#FFFFFF;
+  padding:1rem;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display:flex;
+  flex-direction:column;
+}
+
+.card iframe {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+
+.card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+}
+.card .mood-dot {
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  margin-bottom:0.5rem;
+}
+.card .secret-text {
+  font-size:1rem;
+  color:#000000;
+  margin-bottom:0.5rem;
+  word-wrap:break-word;
+}
+.card-footer { display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:#555555; }
+
+/* --- Forms --- */
+form {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  background-color:#FFFFFF;
+  padding:2rem;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  max-width:600px;
+  margin:2rem auto;
+}
+form textarea, form input, form select {
+  font-family:'Roboto Mono', monospace;
+  font-size:1rem;
+  padding:0.75rem 1rem;
+  border-radius:8px;
+  border:1px solid #D8A7B1;
+  outline:none;
+  width:100%;
+  resize:vertical;
+}
+form button {
+  font-family:'Roboto Mono', monospace;
+  padding:0.75rem 1rem;
+  background-color:#D8A7B1;
+  color:#FFFFFF;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  transition: background-color 0.3s;
+}
+form button:hover { background-color:#A37486; }
+
+/* --- Responsive --- */
+@media(max-width:768px){
+  nav { flex-direction:column; }
+  .grid { grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <a href="#secret-wall">Secret Wall</a>
+  <a href="#dream-input">Dream Input</a>
+  <a href="#crush-codes">Crush Codes</a>
+  <a href="#contact">Contact / About</a>
+</nav>
+
+<!-- Secret Wall -->
+<section id="secret-wall" class="container">
+  <h1>Secret Wall</h1>
+  <div class="grid" id="wall-grid"></div>
+</section>
+
+<!-- Dream Input -->
+<section id="dream-input" class="container">
+  <h1>Dream Input</h1>
+  <form id="dream-form">
+    <textarea id="dream-text" placeholder="Describe your dream or vibe..." required></textarea>
+    <label for="dream-mood">Mood Color:</label>
+    <input type="color" id="dream-mood" value="#D8A7B1">
+    <input type="text" id="dream-song" placeholder="Enter song URL (Spotify/YouTube embed URL)">
+    <button type="submit">Submit Dream</button>
+  </form>
+</section>
+
+<!-- Crush Codes -->
+<section id="crush-codes" class="container">
+  <h2>Enter a Crush Code</h2>
+  <form id="enter-crush-form">
+    <input type="text" id="entered-code" placeholder="Enter your Lucid Crush Code" required>
+    <button type="submit">Unlock</button>
+  </form>
+  <div id="enter-crush-output" style="margin-top:1rem; font-family:'Roboto Mono', monospace;"></div>
+
+  <h1>Crush Codes</h1>
+  <form id="crush-form">
+    <input type="text" id="songs" placeholder="Enter 3 songs (comma separated)" required>
+    <input type="text" id="symbol" placeholder="Choose a symbol (★, ♡, ☾, etc.)" required>
+    <input type="color" id="crush-color" value="#A3C4F3">
+    <textarea id="crush-message" placeholder="Optional secret message"></textarea>
+    <input type="text" id="crush-song" placeholder="Optional song URL (embed URL)">
+    <button type="submit">Generate Crush Code</button>
+  </form>
+  <div id="crush-output" style="margin-top:1rem; font-family:'Roboto Mono', monospace;"></div>
+</section>
+
+<!-- Contact / About -->
+<section id="contact" class="container">
+  <h1>Contact / About Me</h1>
+  <p>Lucid Notes is a dreamy music and secret-sharing web app for teens. Share your dreams, secrets, and create music-infused crush codes!</p>
+  <p>Email: lucidnotes@example.com</p>
+</section>
+
+<!-- JS -->
+<script>
+const wallGrid = document.getElementById('wall-grid');
+const sampleSecrets = [
+  {text:"I dreamed of flying over pink clouds.", mood:"#D8A7B1", song:"https://open.spotify.com/embed/track/7GhIk7Il098yCjg4BQjzvb"},
+  {text:"I secretly like my best friend but can't tell them.", mood:"#A3C4F3"},
+  {text:"Last night I saw a mysterious figure in my dream.", mood:"#C7F0A3"},
+  {text:"I feel like no one understands me when I'm sad.", mood:"#D8A7B1"},
+  {text:"I had a dream about a neon city and lost my way.", mood:"#A3C4F3"},
+];
+
+// --- Render Wall ---
+function renderWall() {
+  wallGrid.innerHTML = "";
+  sampleSecrets.forEach(secret => {
+    const card = document.createElement('div');
+    card.className = "card";
+    let songEmbed = '';
+    if(secret.song){
+      if(secret.song.includes("spotify.com")) {
+        songEmbed = `<iframe src="${secret.song}" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+      } else if(secret.song.includes("youtube.com") || secret.song.includes("youtu.be")) {
+        songEmbed = `<iframe width="100%" height="200" src="${secret.song.replace("watch?v=","embed/")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      } else {
+        songEmbed = `<a href="${secret.song}" target="_blank">🎵 Listen</a>`;
+      }
+    }
+    card.innerHTML = `
+      <div class="mood-dot" style="background-color:${secret.mood}"></div>
+      <div class="secret-text">${secret.text}</div>
+      ${songEmbed}
+      <div class="card-footer">💬 0 replies</div>
+    `;
+    wallGrid.appendChild(card);
+  });
+}
+renderWall();
+
+// --- Dream Input ---
+const dreamForm = document.getElementById('dream-form');
+dreamForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const text = document.getElementById('dream-text').value;
+  const color = document.getElementById('dream-mood').value;
+  const song = document.getElementById('dream-song').value;
+  sampleSecrets.unshift({text, mood:color, song});
+  renderWall();
+  dreamForm.reset();
+  alert("Dream submitted to the Secret Wall!");
+});
+
+// --- Crush Codes ---
+const crushCodes = [];
+const crushForm = document.getElementById('crush-form');
+const crushOutput = document.getElementById('crush-output');
+
+crushForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const songs = document.getElementById('songs').value.split(",").map(s=>s.trim()).join("-");
+  const symbol = document.getElementById('symbol').value || "★";
+  const color = document.getElementById('crush-color').value;
+  const message = document.getElementById('crush-message').value || "";
+  const songUrl = document.getElementById('crush-song').value || "";
+  const code = `${symbol}-${songs}-${color.replace("#","")}`;
+  crushCodes.push({code,message,song:songUrl});
+  crushOutput.innerHTML = `<p>Your Lucid Crush Code: <strong>${code}</strong></p>
+    ${message ? `<p>Message Preview: ${message}</p>` : ''}
+    ${songUrl ? `<p>Song: <a href="${songUrl}" target="_blank">🎵 Listen</a></p>` : ''}`;
+  crushForm.reset();
+});
+
+// --- Enter Crush Code ---
+const enterForm = document.getElementById('enter-crush-form');
+const enterOutput = document.getElementById('enter-crush-output');
+
+enterForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const entered = document.getElementById('entered-code').value.trim();
+  const found = crushCodes.find(c=>c.code===entered);
+  if(found){
+    let songEmbed = '';
+    if(found.song){
+      if(found.song.includes("spotify.com")) {
+        songEmbed = `<iframe src="${found.song}" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+      } else if(found.song.includes("youtube.com") || found.song.includes("youtu.be")) {
+        songEmbed = `<iframe width="100%" height="200" src="${found.song.replace("watch?v=","embed/")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      } else {
+        songEmbed = `<a href="${found.song}" target="_blank">🎵 Listen</a>`;
+      }
+    }
+    enterOutput.innerHTML = `<p>💌 Secret Message: ${found.message || "No hidden message"}</p>${songEmbed}`;
+  } else {
+    enterOutput.innerHTML = `<p style="color:red;">Invalid code!</p>`;
+  }
+  enterForm.reset();
+});
+</script>
+
+</body>
+</html>

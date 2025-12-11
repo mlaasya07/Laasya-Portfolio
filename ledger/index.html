@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ledger Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #0d0d0d;
+        --card: #1a1a1a;
+        --text: #eaeaea;
+        --accent: #7c2323;
+        --border: #333;
+        --yellow: #b59f3b;
+        --green: #258c52;
+        --red: #a83232;
+        font-family: "Roboto Mono", monospace;
+        color-scheme: dark;
+    }
+
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Roboto Mono", monospace;
+    }
+
+    /* Password Lock Screen */
+    #lockScreen {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 14px;
+        z-index: 9999;
+        user-select: none;
+    }
+
+    #lockScreen input {
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--red);
+        background: #111;
+        color: var(--red);
+        width: 220px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    #lockScreen button {
+        padding: 9px 16px;
+        background: var(--accent);
+        color: white;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .wrap {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: var(--accent);
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Search Bar */
+    #searchBox {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #111;
+        color: var(--text);
+        font-size: 14px;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #710616;
+        font-size: 13px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    th {
+        background: #0f0f0f;
+        color: var(--accent);
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    td, th {
+        border-right: 1px solid #710616;
+    }
+
+    tr td:last-child,
+    tr th:last-child {
+        border-right: none;
+    }
+
+    /* Color-coded statuses */
+    .status-paid { background: rgba(37, 140, 82, 0.18); }
+    .status-pending { background: rgba(181, 159, 59, 0.18); }
+    .status-overdue { background: rgba(168, 50, 50, 0.22); }
+
+    /* Tag system */
+    .tag {
+        display: inline-block;
+        padding: 3px 8px;
+        margin-right: 4px;
+        margin-bottom: 2px;
+        background: #000;
+        border: 1px solid #444;
+        border-radius: 5px;
+        font-size: 11px;
+    }
+
+    /* Footer */
+    footer {
+        margin-top: 22px;
+        display: flex;
+        justify-content: flex-end;
+        user-select: none;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        background: var(--accent);
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+        margin-left: 8px;
+    }
+
+    .btn.ghost {
+        background: transparent;
+        border: 1px solid #993039;
+    }
+
+    /* Decode modal */
+    #decodeModal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        background: rgba(0,0,0,0.6);
+    }
+
+    #decodeModal .card {
+        background: #0b0b0b;
+        border-radius: 10px;
+        padding: 18px;
+        width: 320px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    #decodeModal input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        border-radius: 6px;
+        border: 1px solid #333;
+        background: #111;
+        color: var(--text);
+    }
+
+    .top-controls {
+        display:flex;
+        gap:8px;
+        align-items:center;
+    }
+
+    .small {
+        font-size:12px;
+        color:var(--text);
+        opacity:0.8;
+    }
+
+    /* subtle fade for table updates */
+    #ledgerTable { transition: opacity 220ms ease; }
+    #ledgerTable.dimmed { opacity: 0.6; }
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD LOCK -->
+<div id="lockScreen">
+    <h2 style="color:var(--accent); user-select: none;">Enter Password to Open Dashboard</h2>
+    <input type="password" id="passwordInput" placeholder="Password">
+    <div style="display:flex; gap:8px;">
+        <button id="unlockBtn">Unlock</button>
+    </div>
+</div>
+
+<div class="wrap" style="display:none;" id="dashboard">
+    <h1>
+        <span>Ledger Dashboard</span>
+        <span>
+            <button class="btn" id="decodeBtn">Decode Dashboard</button>
+            <button class="btn" id="exportEncBtn">Export CSV (Encrypted)</button>
+            <button class="btn" id="exportDecBtn">Export CSV (Decrypted)</button>
+        </span>
+    </h1>
+
+    <input type="text" id="searchBox" placeholder="Search anything (matches current view)...">
+
+    <table id="ledgerTable" aria-live="polite">
+        <thead>
+        <tr>
+            <th>L.Code</th>
+            <th>Loaner</th>
+            <th>S.Code</th>
+            <th>Seeker</th>
+            <th>Loan Amt</th>
+            <th>Due Date</th>
+            <th>Margin</th>
+            <th>P/L Amt</th>
+            <th>Status</th>
+            <th>Remarks</th>
+        </tr>
+        </thead>
+
+        <tbody id="tableBody">
+            <!-- rendered rows -->
+        </tbody>
+    </table>
+
+    <footer>
+        <p style="font-size:12px; color:var(--text); opacity:0.6;">
+            &copy; 2025 Ledger Dashboard | Made for Latte |
+            <a href="cipher.html" style="color:var(--text); text-decoration:none;">Cipher</a>
+        </p>
+    </footer>
+</div>
+
+<!-- Decode Modal -->
+<div id="decodeModal" role="dialog" aria-modal="true">
+    <div class="card">
+        <h3 style="margin:0 0 8px; color:var(--accent)">Enter Decode Password</h3>
+        <p class="small">Provide the dashboard decode password to view plaintext.</p>
+        <input type="password" id="decodePassword" placeholder="Decode password">
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+            <button class="btn ghost" id="cancelDecode">Cancel</button>
+            <button class="btn" id="confirmDecode">Decode</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* =============================================================
+   CIPHER MAPPINGS (from your cipher.html)
+   - Uppercase letters map to uppercase letters
+   - Digits map to lowercase letters
+   - Reverse maps provided for decoding
+   - NOTE: L.Code and S.Code will NOT be encrypted per request
+============================================================= */
+const letterMap = {
+  'A':'M','B':'P','C':'G','D':'Q','E':'V','F':'L','G':'Y','H':'B','I':'Z','J':'T','K':'W','L':'R','M':'X','N':'C','O':'A','P':'K','Q':'S','R':'U','S':'I','T':'O','U':'J','V':'D','W':'F','X':'E','Y':'H','Z':'N'
+};
+const digitMap = {'0':'s','1':'a','2':'g','3':'r','4':'t','5':'k','6':'v','7':'m','8':'x','9':'p'};
+const letterRev = Object.fromEntries(Object.entries(letterMap).map(([k,v])=>[v,k]));
+const digitRev = Object.fromEntries(Object.entries(digitMap).map(([k,v])=>[v,k]));
+
+/* encodeText / decodeText
+   - handles uppercase letters and digits
+   - preserves punctuation, spaces, slashes, and lowercase letters
+*/
+function encodeText(text) {
+    if (text === null || text === undefined) return "";
+    let out = "";
+    for (let ch of String(text)) {
+        if (/[A-Z]/.test(ch)) {
+            out += (letterMap[ch] ?? ch);
+        } else if (/[0-9]/.test(ch)) {
+            out += (digitMap[ch] ?? ch);
+        } else {
+            out += ch;
+        }
+    }
+    return out;
+}
+
+function decodeText(text) {
+    if (text === null || text === undefined) return "";
+    let out = "";
+    for (let ch of String(text)) {
+        if (/[A-Z]/.test(ch)) {
+            out += (letterRev[ch] ?? ch);
+        } else if (/[a-z]/.test(ch)) {
+            // could be encoded digit letter
+            out += (digitRev[ch] ?? ch);
+        } else if (/[0-9]/.test(ch)) {
+            out += ch;
+        } else {
+            out += ch;
+        }
+    }
+    return out;
+}
+
+/* =============================================================
+   LEDGER DATA — YOU MANUALLY EDIT THESE ROWS (PLAINTEXT)
+   The data here is stored plaintext inside this file.
+   On initial render we will display ENCRYPTED values (except codes).
+============================================================= */
+const ledgerData = [
+    {
+        loaner: "RAMESH",
+        seeker: "SURESH",
+        loanAmt: "₹50,000",
+        due: "12/01/2025",
+        margin: "12%",
+        pl: "₹6,000",
+        status: "Paid",
+        remarks: ["friend", "on-time"]
+    },
+
+    {
+        loaner: "ANITA",
+        seeker: "VIJAY",
+        loanAmt: "₹75,000",
+        due: "05/15/2025",
+        margin: "10%",
+        pl: "₹7,500",
+        status: "Overdue",
+        remarks: ["business"]
+    },
+
+    {
+        loaner: "KARAN",
+        seeker: "PRIYA",
+        loanAmt: "₹30,000",
+        due: "11/20/2025",
+        margin: "15%",
+        pl: "₹4,500",
+        status: "Pending",
+        remarks: ["family", "urgent"]
+    },
+
+    {
+        loaner: "KARAN",
+        seeker: "ANITA",
+        loanAmt: "₹100,000",
+        due: "08/30/2025",
+        margin: "8%",
+        pl: "₹8,000",
+        status: "Paid",
+        remarks: ["long-term"]
+    },
+    {
+        loaner: "SURESH",
+        seeker: "VIJAY",
+        loanAmt: "₹60,000",
+        due: "09/10/2025",
+        margin: "11%",
+        pl: "₹6,600",
+        status: "Pending",
+        remarks: ["friend" ]
+    }
+];
+
+/* =============================================================
+   Compute codes — deterministic fresh registry per render
+   (returns array of { loanerCode, seekerCode })
+   IMPORTANT: codes will be displayed plaintext (not encoded)
+============================================================= */
+function computeCodes(data) {
+    const registry = {};
+    function getNumber(name) {
+        if (!registry[name]) {
+            const next = String(Object.keys(registry).length + 1).padStart(2, "0");
+            registry[name] = { number: next, lastRole: null };
+        }
+        return registry[name].number;
+    }
+    function getRoleCode(name, currentRole) {
+        const person = registry[name];
+        const num = person.number;
+        if (!person.lastRole) {
+            person.lastRole = currentRole;
+            return currentRole + num;
+        }
+        if (person.lastRole === currentRole) {
+            return currentRole + num;
+        }
+        if (person.lastRole === "L" && currentRole === "S") {
+            person.lastRole = "S";
+            return "LS" + num;
+        }
+        if (person.lastRole === "S" && currentRole === "L") {
+            person.lastRole = "L";
+            return "SL" + num;
+        }
+        return currentRole + num;
+    }
+
+    return data.map(row => {
+        getNumber(row.loaner);
+        getNumber(row.seeker);
+        return {
+            loanerCode: getRoleCode(row.loaner, "L"),
+            seekerCode: getRoleCode(row.seeker, "S")
+        };
+    });
+}
+
+/* =============================================================
+   Rendering + Animation (Whole-table approach)
+   - currentViewEncrypted tracks state
+   - renderTable(encrypted) will render the "final" text immediately into cells
+     but we then run animateTransition to visually transition current visible text
+     to the new target text.
+   - L.Code and S.Code are not encrypted (displayed plaintext).
+============================================================= */
+
+let currentViewEncrypted = true; // initial: encrypted
+let computedCodes = computeCodes(ledgerData);
+
+/* small utility to escape HTML when inserting via innerHTML templates */
+function escapeHtml(str) {
+    if (str === null || str === undefined) return "";
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* characters pool for scramble animations (letters + digits + symbols) */
+const SCRAMBLE_POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$@#%&*+-=[]{}<>";
+
+/* scramble function (from your idea) */
+function scramble(text, characters, revealedSet) {
+  const pool = characters.split("");
+  return text
+    .split("")
+    .map((char, i) => {
+      if (char === " ") return " ";
+      if (revealedSet.has(i)) return text[i];
+      return pool[Math.floor(Math.random() * pool.length)];
+    })
+    .join("");
+}
+
+function getNextRevealIndex(text, revealedSet, direction = "start") {
+  const len = text.length;
+  switch (direction) {
+    case "start":
+      return revealedSet.size;
+    case "end":
+      return len - 1 - revealedSet.size;
+    case "center":
+      const mid = Math.floor(len / 2);
+      const offset = Math.floor(revealedSet.size / 2);
+      const idx =
+        revealedSet.size % 2 === 0 ? mid + offset : mid - offset - 1;
+      return Math.max(0, Math.min(len - 1, idx));
+    default:
+      return revealedSet.size;
+  }
+}
+
+/* decryptStep (makes one reveal step) */
+function decryptStep({ text, characters = SCRAMBLE_POOL, revealedSet, sequential = true }) {
+  if (sequential) {
+    const idx = getNextRevealIndex(text, revealedSet, "start");
+    revealedSet.add(idx);
+  }
+  return scramble(text, characters, revealedSet);
+}
+
+/* animateTransition:
+   - cells: array of DOM elements to animate (we will animate their textContent)
+   - targetTexts: array of target text strings (same order as cells)
+   - duration: total duration in ms
+   - direction: 'reveal' (scrambled -> target) or 'scramble' (target -> scrambled target)
+*/
+function animateTransition(cells, targetTexts, duration = 900, direction = "reveal") {
+    // For whole-table animation we animate all cells simultaneously.
+    // Each cell gets its own revealedSet (so characters reveal per-cell).
+    const start = performance.now();
+    const revealedSets = targetTexts.map(t => new Set());
+
+    // If direction is "scramble", we want to animate from plaintext to encoded:
+    // We'll treat targetTexts as final values and start from current visible text.
+    // For "reveal", we start from current visible text (scrambled) to target plain.
+
+    // For smoother feel, precompute lengths to avoid re-evaluating frequently
+    const lengths = targetTexts.map(t => String(t).length);
+
+    // animation loop
+    function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        // compute how many reveal steps should have been performed by now
+        // we'll map t in [0..1] to reveal counts linearly
+        cells.forEach((cell, i) => {
+            const target = String(targetTexts[i] ?? "");
+            // revealCount: how many characters should be revealed now (0..len)
+            const revealCount = Math.floor(t * lengths[i]);
+            // ensure revealedSet has revealCount items
+            while (revealedSets[i].size < revealCount) {
+                const idx = getNextRevealIndex(target, revealedSets[i], "start");
+                revealedSets[i].add(idx);
+            }
+
+            // build display string: if we're transitioning to scrambled target, use target as base for reveal logic
+            const baseText = target;
+            const display = scramble(baseText, SCRAMBLE_POOL, revealedSets[i]);
+            cell.textContent = display;
+        });
+
+        if (t < 1) {
+            requestAnimationFrame(frame);
+        } else {
+            // ensure final exact target text
+            cells.forEach((cell, i) => cell.textContent = String(targetTexts[i] ?? ""));
+        }
+    }
+
+    requestAnimationFrame(frame);
+}
+
+/* renderTable creates the DOM rows and places either encoded or plaintext values
+   into the 'target' state. We then animate the visual transition from the
+   currently-visible content to the new target content with animateTransition.
+
+   Note: For L.Code and S.Code we ALWAYS display plaintext (user requested).
+*/
+function renderTable(encrypted = true, animate = false) {
+    currentViewEncrypted = encrypted;
+    const body = document.getElementById("tableBody");
+    // We'll prepare a fresh DOM but keep the previous visible elements for animation.
+    // To keep whole-table animation, first capture currently-displayed text nodes for animating,
+    // then replace innerHTML with new final content, but set visible text back to old text,
+    // then call animateTransition to morph to new content.
+    const prevVisible = []; // array of textContent per cell we will animate
+    const prevCells = [];
+
+    // capture existing cells if present
+    const existingCells = document.querySelectorAll("#tableBody td");
+    existingCells.forEach(td => {
+        prevVisible.push(td.textContent);
+        prevCells.push(td);
+    });
+
+    // compute codes fresh
+    computedCodes = computeCodes(ledgerData);
+
+    // build new rows as HTML strings (final target values)
+    const rowsHtml = ledgerData.map((row, idx) => {
+        const codes = computedCodes[idx];
+        // L.Code and S.Code always plaintext (per request)
+        const displayLoanerCode = codes.loanerCode;
+        const displaySeekerCode = codes.seekerCode;
+        const loanerText = encrypted ? encodeText(row.loaner) : row.loaner;
+        const seekerText = encrypted ? encodeText(row.seeker) : row.seeker;
+        const loanAmtText = encrypted ? encodeText(row.loanAmt) : row.loanAmt;
+        const dueText = encrypted ? encodeText(row.due) : row.due;
+        const marginText = encrypted ? encodeText(row.margin) : row.margin;
+        const plText = encrypted ? encodeText(row.pl) : row.pl;
+        const statusText = encrypted ? encodeText(row.status) : row.status;
+        const remarksText = row.remarks.map(r => encrypted ? encodeText(r) : r).map(r => `<span class='tag'>${escapeHtml(r)}</span>`).join("");
+
+        // preserve color classes based on plaintext status
+        const st = (row.status || "").toLowerCase();
+        const rowClass = (st === "paid") ? "status-paid" : (st === "pending") ? "status-pending" : (st === "overdue") ? "status-overdue" : "";
+
+        return `<tr class="${rowClass}">
+            <td data-col="loanerCode">${escapeHtml(displayLoanerCode)}</td>
+            <td data-col="loaner">${escapeHtml(loanerText)}</td>
+            <td data-col="seekerCode">${escapeHtml(displaySeekerCode)}</td>
+            <td data-col="seeker">${escapeHtml(seekerText)}</td>
+            <td data-col="loanAmt">${escapeHtml(loanAmtText)}</td>
+            <td data-col="due">${escapeHtml(dueText)}</td>
+            <td data-col="margin">${escapeHtml(marginText)}</td>
+            <td data-col="pl">${escapeHtml(plText)}</td>
+            <td data-col="status">${escapeHtml(statusText)}</td>
+            <td data-col="remarks">${remarksText}</td>
+        </tr>`;
+    }).join("");
+
+    // Replace body HTML with new final content
+    body.innerHTML = rowsHtml;
+
+    // If animation requested: perform whole-table animation to transition visible text from previous
+    // to current final text. We'll animate only the data cells (exclude header cells and L.Code/S.Code).
+    if (animate && prevCells.length > 0) {
+        // collect target cells (new DOM) that correspond to animated columns
+        const newCells = Array.from(document.querySelectorAll("#tableBody td"));
+        // We'll map only cells that are not L.Code / S.Code columns (col indices 0 and 2 are codes)
+        // Build arrays of DOM elements and their target text for animation.
+        const animCells = [];
+        const animTargets = [];
+
+        // column index mapping: 0:L.Code (skip), 1:Loaner, 2:S.Code (skip), 3:Seeker, 4:LoanAmt,5:Due,6:Margin,7:PL,8:Status,9:Remarks
+        newCells.forEach((cell, i) => {
+            const col = cell.getAttribute("data-col");
+            if (col === "loanerCode" || col === "seekerCode") {
+                // do not animate codes; leave them as final
+                return;
+            }
+            // For remarks we will animate their innerText (tags produce elements). Use innerText to animate.
+            animCells.push(cell);
+            // target value should be the text content (for tags it's the innerText)
+            animTargets.push(cell.textContent);
+            // set cell to previous visible content if available, else scrambled start
+            const prevText = prevVisible[i] ?? scramble(String(cell.textContent), SCRAMBLE_POOL, new Set());
+            cell.textContent = prevText;
+        });
+
+        // If there are animated cells, run whole-table animation
+        if (animCells.length > 0) {
+            // add dim class to table for subtle effect
+            const table = document.getElementById("ledgerTable");
+            table.classList.add("dimmed");
+            animateTransition(animCells, animTargets, 3000, encrypted ? "reveal" : "scramble");
+            // remove dim after animation completes
+            setTimeout(() => table.classList.remove("dimmed"), 1100);
+        }
+    }
+    // update decode button label
+    updateDecodeButton();
+}
+
+/* =============================================================
+   Search / Filter
+   - works on the current displayed text (encrypted or decrypted)
+============================================================= */
+document.getElementById("searchBox").addEventListener("input", function () {
+    const q = this.value.trim().toLowerCase();
+    const rows = document.querySelectorAll("#tableBody tr");
+    rows.forEach(r => {
+        r.style.display = r.innerText.toLowerCase().includes(q) ? "" : "none";
+    });
+});
+
+/* =============================================================
+   Export CSV (Encrypted / Decrypted)
+============================================================= */
+function exportCSV(encrypted = true) {
+    const codes = computeCodes(ledgerData);
+    let csv = "LoanerCode,Loaner,SeekerCode,Seeker,LoanAmt,DueDate,Margin,PLAmt,Status,Remarks\n";
+    ledgerData.forEach((row, idx) => {
+        const c = codes[idx];
+        const lc = c.loanerCode; // codes are always plaintext in file/CSV
+        const sc = c.seekerCode;
+        const loaner = encrypted ? encodeText(row.loaner) : row.loaner;
+        const seeker = encrypted ? encodeText(row.seeker) : row.seeker;
+        const loanAmt = encrypted ? encodeText(row.loanAmt) : row.loanAmt;
+        const due = encrypted ? encodeText(row.due) : row.due;
+        const margin = encrypted ? encodeText(row.margin) : row.margin;
+        const pl = encrypted ? encodeText(row.pl) : row.pl;
+        const status = encrypted ? encodeText(row.status) : row.status;
+        const remarks = row.remarks.map(r => encrypted ? encodeText(r) : r).join(" ");
+
+        const safe = v => `"${String(v).replace(/"/g, '""')}"`;
+        csv += [lc, loaner, sc, seeker, loanAmt, due, margin, pl, status, remarks].map(safe).join(",") + "\n";
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = encrypted ? "ledger_encrypted.csv" : "ledger_decrypted.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+/* =============================================================
+   Decode / Re-encrypt UI & passwords
+   - initial unlock: 'latte1316'
+   - decode password: '131689' (as requested)
+   - on correct decode password -> render decrypted view with animation
+   - re-encrypt -> animate back to encrypted view
+============================================================= */
+
+const INITIAL_UNLOCK_PASSWORD = "latte1316";
+const DECODE_PASSWORD = "131689";
+
+document.getElementById("unlockBtn").onclick = () => {
+    const p = document.getElementById("passwordInput").value.trim();
+    if (p === INITIAL_UNLOCK_PASSWORD) {
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        // initial render should be encrypted but with no prior visible text to animate
+        renderTable(true, false);
+    } else {
+        alert("Incorrect password.");
+    }
+};
+// Allow pressing ENTER to unlock the dashboard
+document.getElementById("passwordInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        document.getElementById("unlockBtn").click();
+    }
+});
+
+
+const decodeBtn = document.getElementById("decodeBtn");
+const decodeModal = document.getElementById("decodeModal");
+const confirmDecode = document.getElementById("confirmDecode");
+const cancelDecode = document.getElementById("cancelDecode");
+
+decodeBtn.addEventListener("click", () => {
+    if (currentViewEncrypted) {
+        document.getElementById("decodePassword").value = "";
+        decodeModal.style.display = "flex";
+        document.getElementById("decodePassword").focus();
+    } else {
+        // currently decrypted -> re-encrypt with animation
+        // renderTable(true, true) will animate from displayed plaintext -> encrypted
+        renderTable(true, true);
+    }
+});
+
+cancelDecode.addEventListener("click", () => {
+    decodeModal.style.display = "none";
+});
+
+confirmDecode.addEventListener("click", () => {
+    const p = document.getElementById("decodePassword").value.trim();
+    if (p === DECODE_PASSWORD) {
+        decodeModal.style.display = "none";
+        // animate decrypt: target is decrypted strings, animate from current encrypted display
+        renderTable(false, true);
+    } else {
+        alert("Incorrect decode password.");
+    }
+});
+
+function updateDecodeButton() {
+    decodeBtn.textContent = currentViewEncrypted ? "Decode Dashboard" : "Re-encrypt Dashboard";
+}
+
+/* =============================================================
+   Export buttons wiring
+============================================================= */
+document.getElementById("exportEncBtn").addEventListener("click", ()=>exportCSV(true));
+document.getElementById("exportDecBtn").addEventListener("click", ()=>exportCSV(false));
+
+/* =============================================================
+   Keyboard shortcuts
+============================================================= */
+document.getElementById("decodePassword").addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key === "Enter") confirmDecode.click();
+});
+document.addEventListener("keydown", (e) => {
+    // quick toggle: Ctrl+Shift+D toggles decode/re-encrypt (only when dashboard visible)
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "d" && document.getElementById("dashboard").style.display === "block") {
+        decodeBtn.click();
+    }
+});
+
+/* =============================================================
+   End of script
+============================================================= */
+</script>
+
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>My Reading Cabinet</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Roboto+Mono:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* Palette: warm mahogany + brass */
+    --bg: #000000;
+    --panel-bg: #fff8ee;
+    --card-bg: #fbf1de;
+    --mahogany: #5a2b1f;
+    --brass: #b0894c;
+    --ink: #211613;
+    --muted: #8b7a70;
+    --shadow-strong: rgba(0,0,0,0.22);
+    --shadow-soft: rgba(0,0,0,0.10);
+
+    --letter-size:46px;
+    --drawer-width:480px;
+    --panel-max-h:420px;
+    --panel-pad:18px;
+
+    font-family: "Playfair Display", serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:32px;
+    background: #000000;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap {
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    gap:28px;
+    align-items:flex-start;
+  }
+
+  .library {
+    flex:1;
+    min-width:420px;
+  }
+
+  .title {
+    font-family: "Montserrat", sans-serif;
+    color: #fbf1de;
+    letter-spacing:1px;
+    font-weight:700;
+    margin-bottom:14px;
+    font-size:18px;
+    user-select: none;
+  }
+
+  /* A–Z row */
+  .alpha-row {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+
+  .letter-btn {
+    width:var(--letter-size);
+    height:var(--letter-size);
+    border-radius:8px;
+    border:2px solid rgba(0,0,0,0.08);
+    background: linear-gradient(180deg,#fff7ec,#f2e6d5);
+    color:var(--mahogany);
+    display:grid;
+    place-items:center;
+    font-family: "Montserrat", sans-serif;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow: 0 8px 18px var(--shadow-soft);
+    transition: transform 180ms cubic-bezier(.2,.9,.3,1), box-shadow 180ms;
+  }
+  .letter-btn:hover { transform:translateY(-4px); box-shadow: 0 16px 40px var(--shadow-strong); }
+  .letter-btn:focus { outline:3px solid rgba(176,137,72,0.18); transform: translateY(-3px); }
+
+  /* stage for the drawers (panels injected here) */
+  .drawer-stage {
+    position: relative;
+    min-height: 48px;
+    margin-top: 6px;
+  }
+
+  /* sliding drawer (hidden by default) */
+  .drawer-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--drawer-width);
+    max-width: calc(100% - 40px);
+    pointer-events: none;
+    transform-origin: top center;
+    opacity: 0;
+    transform: translateY(-10px) scaleY(.98);
+    transition: opacity 260ms ease, transform 320ms cubic-bezier(.2,.9,.28,1);
+    z-index: 200;
+  }
+  .drawer-panel.open {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    pointer-events: auto;
+  }
+
+  /* the case-file card */
+  .case-card {
+    background: linear-gradient(180deg,var(--card-bg), #fbf1da);
+    border: 2px solid var(--mahogany);
+    border-radius:8px;
+    padding: var(--panel-pad);
+    box-shadow: 0 22px 56px var(--shadow-strong);
+    width:100%;
+    max-height: var(--panel-max-h);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .case-header { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .case-title { font-family:"Playfair Display", serif; font-size:18px; font-weight:700; color:var(--mahogany); user-select: none; }
+  .case-sub { font-family:"Roboto Mono", monospace; color:var(--muted); font-size:13px; }
+
+  .brass-handle {
+    width:64px; height:12px;
+    background: linear-gradient(180deg,#e4c57c,#b0894c);
+    border-radius:6px; border:1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08) inset;
+  }
+
+  /* list */
+  .folder-list {
+    overflow:auto;
+    border-top:1px dashed rgba(0,0,0,0.06);
+    padding-top:8px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .folder-list::-webkit-scrollbar { width:10px }
+  .folder-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.07); border-radius:6px; }
+  .folder-list { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.07) transparent }
+
+  .sub-item {
+    display:flex; gap:12px; align-items:center;
+    padding:10px 12px; background:#fffaf1; border-radius:8px;
+    border:1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+    text-decoration:none; color:inherit; transition: transform 140ms ease, box-shadow 140ms ease;
+    font-family:"Playfair Display", serif;
+  }
+  .sub-item:hover, .sub-item:focus { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(0,0,0,0.12); outline:none; }
+  .sub-meta { font-family:"Roboto Mono", monospace; color:var(--muted); width:84px; font-size:12px }
+  .sub-name { font-weight:700; font-size:15px; color:var(--mahogany) }
+
+  .drawer-arrow {
+    position:absolute; top:-10px; left:36px; width:0; height:0;
+    border-left:10px solid transparent; border-right:10px solid transparent;
+    border-bottom:12px solid var(--card-bg);
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.08));
+  }
+
+  .wood-strip {
+    position:absolute; bottom:-18px; left:12px; width:36px; height:16px;
+    background: linear-gradient(90deg,#613023,#5a2b1f); border-radius:4px; opacity:0.9; transform: rotate(-2deg);
+  }
+
+  @media (max-width:900px){
+    :root{ --drawer-width:calc(100vw - 48px); --panel-max-h:340px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- RIGHT: Library UI -->
+    <div class="library" id="library">
+      <div class="title">My Reading Cabinet</div>
+
+      <div class="alpha-row" id="alphaRow" role="tablist" aria-label="Alphabet index"></div>
+
+      <div class="drawer-stage" id="drawerStage" aria-live="polite"></div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   BOOK DATA: replace PDF links with your files
+   Each letter maps to an array of {title, pdf}
+   ========================= */
+const BOOKS = {
+  A: [
+    {title:"A Thousand Tales", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Autumn Library", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Atlas of Evening", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  B: [
+    {title:"Beneath the Willow", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Brass and Velvet", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  C: [
+    {title:"Crimson Skies", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Chasing Shadows", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  D: [
+    {title:"Dawn's Embrace", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  E: [
+    {title:"Echoes of Time", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Eternal Flame", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  F: [
+    {title:"Fables of the Forest", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  G: [
+    {title:"Glimmering Dreams", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Garden of Whispers", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  H: [
+    {title:"Harbor Lights", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  I: [
+    {title:"Illusions of Grandeur", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  J: [
+    {title:"Journey to the Unknown", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  K: [
+    {title:"King of Envy", pdf:"./books/King of Envy.pdf"},
+    {title:"King of Wrath", pdf:"./books/King of Wrath.pdf"},
+    {title:"King of Greed", pdf:"./books/King of Greed.pdf"}
+  ],
+  L: [
+    {title:"Luminous Pathways", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  M: [
+    {title:"Midnight Garden", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Monarch's Note", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  N: [
+    {title:"Nebula's Edge", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  O: [
+    {title:"Ocean's Whisper", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  P: [
+    {title:"Phantom's Lullaby", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Portraits in Time", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  Q: [
+    {title:"Quest for Glory", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  R: [
+    {title:"Rivers of Gold", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  S: [
+    {title:"Silent Echoes", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Sunset Reverie", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  T: [
+    {title:"Twilight Serenade", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  U: [
+    {title:"Under the Stars", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  V: [
+    {title:"Velvet Horizons", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  W: [
+    {title:"Whispers in the Wind", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"},
+    {title:"Winds of Change", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  X: [],
+  Y: [
+    {title:"Yonder Skies", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ],
+  Z: [
+    {title:"Zephyr's Call", pdf:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
+  ]
+
+};
+
+/* ensure every letter A..Z has an array */
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(ch => { if(!BOOKS[ch]) BOOKS[ch]=[] });
+
+/* ---------- build alphabet buttons ---------- */
+const alphaRow = document.getElementById('alphaRow');
+const drawerStage = document.getElementById('drawerStage');
+
+function mkButton(letter){
+  const btn = document.createElement('button');
+  btn.className = 'letter-btn';
+  btn.textContent = letter;
+  btn.dataset.letter = letter;
+  btn.setAttribute('aria-expanded','false');
+  btn.setAttribute('aria-controls', `drawer-${letter}`);
+  return btn;
+}
+
+/* create buttons and attach behavior */
+Object.keys(BOOKS).forEach(letter => {
+  const btn = mkButton(letter);
+  alphaRow.appendChild(btn);
+
+  // both hover (desktop) and click (mobile) behavior:
+  // detect hover-capable devices
+  const hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if(hoverCapable){
+    // hover opens (desktop)
+    btn.addEventListener('mouseenter', ()=> openDrawer(btn));
+    btn.addEventListener('mouseleave', ()=> {
+      // close after small delay if not moving into panel
+      setTimeout(()=> {
+        if(!isCursorInCurrentPanel()) closeCurrent();
+      }, 160);
+    });
+  }
+
+  // click toggles (touch & also useful on desktop)
+  btn.addEventListener('click', (e)=> {
+    e.preventDefault();
+    toggleDrawer(btn);
+  });
+
+  // keyboard support
+  btn.addEventListener('keydown', (ev)=> {
+    if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleDrawer(btn); }
+    if(ev.key === 'ArrowRight') { focusAdjacent(btn,1); }
+    if(ev.key === 'ArrowLeft') { focusAdjacent(btn,-1); }
+    if(ev.key === 'Escape') { closeCurrent(); }
+  });
+});
+
+/* ---------- panel creation & positioning ---------- */
+let current = null; // {letter, btn, panel}
+
+function createPanel(letter){
+  const panel = document.createElement('div');
+  panel.className = 'drawer-panel';
+  panel.id = `drawer-${letter}`;
+  panel.setAttribute('role','region');
+  panel.setAttribute('aria-label', `${letter} drawer`);
+
+  // arrow
+  const arrow = document.createElement('div');
+  arrow.className = 'drawer-arrow';
+  panel.appendChild(arrow);
+
+  // card
+  const card = document.createElement('div');
+  card.className = 'case-card';
+  const header = document.createElement('div'); header.className='case-header';
+  header.innerHTML = `
+    <div>
+      <div class="case-title">Shelf — ${letter}</div>
+      <div class="case-sub">${BOOKS[letter].length} items</div>
+    </div>
+    <div class="brass-handle" aria-hidden="true"></div>
+  `;
+  card.appendChild(header);
+
+  const list = document.createElement('div');
+  list.className = 'folder-list';
+  list.setAttribute('role','list');
+
+  // populate books
+  BOOKS[letter].forEach((b, i) => {
+    const a = document.createElement('a');
+    a.className = 'sub-item';
+    a.href = b.pdf;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.setAttribute('role','listitem');
+    a.innerHTML = `<div class="sub-meta">${letter} ${(i+1).toString().padStart(3,'0')}</div><div class="sub-name">${b.title}</div>`;
+    list.appendChild(a);
+  });
+
+  // if no books, show hint
+  if(BOOKS[letter].length === 0){
+    const hint = document.createElement('div');
+    hint.style.color = 'var(--muted)';
+    hint.style.fontFamily = 'Roboto Mono, monospace';
+    hint.style.padding = '14px';
+    hint.textContent = 'No books added yet. Drop PDFs and add titles to this shelf.';
+    list.appendChild(hint);
+  }
+
+  card.appendChild(list);
+  panel.appendChild(card);
+
+  // small wood strip
+  const strip = document.createElement('div');
+  strip.className = 'wood-strip';
+  panel.appendChild(strip);
+
+  drawerStage.appendChild(panel);
+  return panel;
+}
+
+function positionPanel(panel, btn){
+  const stageRect = drawerStage.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+
+  const desiredLeft = btnRect.left - stageRect.left + (btnRect.width/2) - (panel.offsetWidth/2);
+  const left = Math.max(10, Math.min(desiredLeft, stageRect.width - panel.offsetWidth - 10));
+  panel.style.left = `${left}px`;
+
+  const top = btnRect.bottom - stageRect.top + 10;
+  panel.style.top = `${top}px`;
+
+  const arrow = panel.querySelector('.drawer-arrow');
+  const arrowLeft = btnRect.left - (stageRect.left + left) + (btnRect.width / 2) - 10;
+  arrow.style.left = `${Math.max(12, Math.min(arrowLeft, panel.offsetWidth - 28))}px`;
+}
+
+/* ---------- open/close/toggle logic (only one open at a time) ---------- */
+function openDrawer(btn){
+  const letter = btn.dataset.letter;
+  if(current && current.letter === letter) return; // already open
+  if(current) closeCurrent();
+
+  let panel = document.getElementById(`drawer-${letter}`);
+  if(!panel) panel = createPanel(letter);
+
+  positionPanel(panel, btn);
+  requestAnimationFrame(()=> panel.classList.add('open'));
+
+  btn.setAttribute('aria-expanded','true');
+  current = { letter, btn, panel };
+
+  // attach panel hover listeners so leaving panel closes (desktop)
+  panel.addEventListener('mouseleave', handlePanelLeave);
+}
+
+function closeCurrent(){
+  if(!current) return;
+  const {btn, panel} = current;
+  panel.classList.remove('open');
+  btn.setAttribute('aria-expanded','false');
+  setTimeout(()=> { if(panel.parentNode) panel.parentNode.removeChild(panel); }, 320);
+  current = null;
+}
+
+function toggleDrawer(btn){
+  const letter = btn.dataset.letter;
+  if(current && current.letter === letter){ closeCurrent(); return; }
+  openDrawer(btn);
+}
+
+function handlePanelLeave(){
+  setTimeout(()=> {
+    if(!current) return;
+    const insideBtn = current.btn.matches(':hover');
+    const insidePanel = current.panel.matches(':hover');
+    if(!insideBtn && !insidePanel) closeCurrent();
+  }, 160);
+}
+
+function isCursorInCurrentPanel(){
+  return current && (current.btn.matches(':hover') || (current.panel && current.panel.matches(':hover')));
+}
+
+/* keyboard helper */
+function focusAdjacent(btn, dir){
+  const all = Array.from(document.querySelectorAll('.letter-btn'));
+  const i = all.indexOf(btn);
+  const next = all[(i + dir + all.length) % all.length];
+  next.focus();
+}
+
+/* click away closes */
+document.addEventListener('click', (e)=>{
+  if(!current) return;
+  const isBtn = e.target.closest('.letter-btn');
+  const isPanel = current.panel && e.target.closest(`#${current.panel.id}`);
+  if(!isBtn && !isPanel) closeCurrent();
+});
+
+/* reposition on resize */
+window.addEventListener('resize', ()=> { if(current) positionPanel(current.panel, current.btn); });
+
+/* accessibility: escape closes */
+document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeCurrent(); });
+
+</script>
+</body>
+</html>

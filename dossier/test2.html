@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Alphabet Drawer — Hover (desktop) / Tap (mobile)</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Roboto+Mono:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #faf8f2;
+    --paper: #fffef9;
+    --card: #f7efe0;
+    --ink: #1a120b;
+    --muted: #6b6b6b;
+    --accent: #000000;
+    --shadow: rgba(0,0,0,0.12);
+
+    --letter-size: 44px;
+    --drawer-width: 420px;
+    --panel-max-h: 360px;
+    --panel-padding: 16px;
+
+    font-family: "Playfair Display", serif;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:28px;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .wrap {
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  /* top alphabet row */
+  .alpha-row {
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+
+  .letter-btn {
+    width:var(--letter-size);
+    height:var(--letter-size);
+    border-radius:6px;
+    border:2px solid var(--accent);
+    background:var(--paper);
+    display:inline-grid;
+    place-items:center;
+    font-family: "Montserrat", sans-serif;
+    font-weight:700;
+    cursor:pointer;
+    user-select:none;
+    transition: transform .14s ease, box-shadow .14s ease;
+    box-shadow: 0 6px 14px var(--shadow);
+  }
+  .letter-btn:focus { outline: 3px solid rgba(0,120,255,0.12); transform: translateY(-3px); }
+  .letter-btn:hover { transform: translateY(-4px); box-shadow: 0 16px 34px var(--shadow); }
+
+  /* container for all dynamic drawer panels (positioned absolute relative to .wrap) */
+  .drawer-stage {
+    position: relative;
+    margin-top: 4px;
+    min-height: 8px;
+  }
+
+  /* the sliding panel (hidden by default) */
+  .drawer-panel {
+    position: absolute;
+    top: 0;
+    left: 0; /* JS will set x */
+    width: var(--drawer-width);
+    max-width: calc(100vw - 48px);
+    background: transparent;
+    overflow: visible;
+    pointer-events: none; /* until opened */
+    transition: opacity 200ms ease, transform 220ms cubic-bezier(.2,.9,.3,1);
+    opacity: 0;
+    transform: translateY(-6px) scaleY(.98);
+  }
+
+  .drawer-panel.open {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    pointer-events: auto;
+  }
+
+  /* case-file card (vintage) inside the panel */
+  .case-card {
+    background: linear-gradient(180deg, var(--card), #fbf6ea);
+    border: 2px solid var(--accent);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+    padding: var(--panel-padding);
+    border-radius: 6px;
+    width: 100%;
+    max-height: var(--panel-max-h);
+    overflow: hidden;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .case-header {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .case-title {
+    font-family: "Montserrat", sans-serif;
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:16px;
+  }
+  .case-sub {
+    font-family: "Roboto Mono", monospace;
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  /* list area */
+  .folder-list {
+    margin-top:6px;
+    overflow:auto;
+    border-top: 1px dashed rgba(0,0,0,0.06);
+    padding-top:10px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  /* individual subfolder item (looks like a small file card) */
+  .sub-item {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    background:#fff;
+    border:1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+    border-radius:6px;
+    cursor:pointer;
+    text-decoration:none;
+    color:inherit;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .sub-item:hover, .sub-item:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+    outline: none;
+  }
+  .sub-meta { font-family: "Roboto Mono", monospace; color:var(--muted); font-size:12px; width:84px }
+  .sub-name { font-weight:700; font-size:15px; font-family: "Playfair Display", serif; }
+
+  /* small pointer arrow connecting letter -> drawer */
+  .drawer-arrow {
+    width:0; height:0;
+    border-left:8px solid transparent;
+    border-right:8px solid transparent;
+    border-bottom:10px solid var(--card);
+    position:absolute;
+    top:-10px;
+    left:32px; /* adjusted by JS */
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.06));
+  }
+
+  /* ensure the folder list scrolls nicely */
+  .folder-list::-webkit-scrollbar { width:10px }
+  .folder-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius:6px }
+  .folder-list { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.08) transparent }
+
+  /* responsive */
+  @media (max-width:820px){
+    :root{ --drawer-width:calc(100vw - 48px); --panel-max-h:320px }
+    .drawer-panel { left:8px !important }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <div class="alpha-row" id="alphaRow" aria-label="Alphabet index"></div>
+
+    <!-- drawer stage is where panel elements will be positioned / injected -->
+    <div class="drawer-stage" id="drawerStage" aria-live="polite"></div>
+
+    <!-- small reference thumbnail using the uploaded file path -->
+    <div style="position:fixed; right:14px; bottom:14px; width:140px; border:1px solid rgba(0,0,0,0.06); background:#fff; box-shadow:0 12px 30px rgba(0,0,0,0.06)">
+      <img src="/mnt/data/b6e10da6-aa76-4506-a132-b875cbfca4e9.png" alt="reference" style="width:100%;display:block" />
+      <div style="padding:6px;font-family:Roboto Mono, monospace;font-size:11px;color:#666;text-align:center">reference</div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   Data: sample names for each letter
+   Add more names to any letter array (100+ supported)
+   ========================= */
+const DATA = {
+  A: ["Aaron","Amor","Anoki","Arden","Aurelia","Atlas","Ariadne","August","Azura","Avis"],
+  B: ["Baxter","Bea","Bruno","Blythe","Benson","Bianca","Bram","Beryl","Bowie","Briar"],
+  C: ["Caden","Cleo","Cyrus","Cora","Calder","Carmine","Casper","Celeste","Cliff","Corin"],
+  D: ["Dara","Damon","Della","Dex","Dorian","Dottie","Drew","Dahlia","Drake","Donovan"],
+  E: ["Eamon","Eira","Elsa","Eldon","Eloise","Emmett","Enzo","Estelle","Evelyn","Ezra"],
+  F: ["Fable","Faris","Faye","Felix","Fern","Fletcher","Flora","Forrest","Frida","Fynn"],
+  G: ["Gabe","Galen","Gemma","Gideon","Greer","Gwen","Gunnar","Giselle","Griff","Gio"],
+  H: ["Hana","Hector","Holly","Hugo","Hyde","Helena","Hollis","Harlan","Honor","Huxley"],
+  I: ["Iago","Iris","Iker","Imogen","Indra","Irving","Isla","Ivo","Ivy","Ione"],
+  J: ["Jace","Juno","Jasper","Junia","Jared","Jill","Jonah","Jovie","Jett","June"],
+  K: ["Kai","Kara","Kellan","Keira","Kip","Kora","Knox","Keenan","Kia","Kestrel"],
+  L: ["Lark","Liam","Lena","Leif","Lilac","Lionel","Livia","Locke","Lola","Lucan"],
+  M: ["Mabel","Marek","Marin","Mason","Maia","Milo","Mira","Morgana","Moss","Myles"],
+  N: ["Nate","Nia","Nolan","Nora","Nico","Nyx","Noel","Nadine","Nova","Niles"],
+  O: ["Oak","Odette","Odin","Ola","Olive","Orion","Orla","Otis","Owen","Oz"],
+  P: ["Pace","Pallas","Pax","Pearl","Peregrine","Piper","Porter","Priya","Quinn P","Poppy"],
+  Q: ["Quade","Quella","Quentin","Quinlan","Quorra","Queenie","Quill","Quint","Quincy","Quest"],
+  R: ["Rafe","Rainn","Raven","Ree","Reid","Remy","Rhea","Ridge","Rosa","Rowan"],
+  S: ["Sable","Sage","Sasha","Silas","Soren","Stella","Sybil","Sylas","Suri","Sven"],
+  T: ["Tala","Tate","Thorne","Tiber","Tilda","Torin","Tory","Trent","Tova","Tully"],
+  U: ["Ugo","Uma","Ulysses","Una","Urban","Uri","Uriah","Ursula","Utah","Umi"],
+  V: ["Vale","Vera","Vesper","Vigo","Violet","Vira","Voss","Vanya","Vance","Vita"],
+  W: ["Wade","Wren","Wyatt","Willa","Wynn","Walden","Ward","Winifred","Wilder","Wrenna"],
+  X: ["Xane","Xanthe","Xavier","Xena","Xerxes","Xia","Ximena","Xoe","Xuri","Xander"],
+  Y: ["Yara","Yates","Yelena","Yorick","Yoshi","Yara-Lynn","Ynez","Yonah","Yumi","Yves"],
+  Z: ["Zadie","Zane","Zephyr","Zelda","Zeno","Zia","Zinnia","Ziva","Zora","Zuko"]
+};
+
+/* =========================
+   Setup UI: create A–Z buttons
+   ========================= */
+const alphaRow = document.getElementById('alphaRow');
+const drawerStage = document.getElementById('drawerStage');
+const letters = Object.keys(DATA); // A..Z
+
+letters.forEach(letter => {
+  const btn = document.createElement('button');
+  btn.className = 'letter-btn';
+  btn.textContent = letter;
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', `drawer-${letter}`);
+  btn.dataset.letter = letter;
+
+  alphaRow.appendChild(btn);
+
+  // events differ by device capability: desktop => hover, touch => click
+  // We'll detect at runtime and bind both behaviors appropriately.
+});
+
+/* helper: detect "desktop hover-capable" */
+const isHoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/* track currently open letter (only one at a time) */
+let currentOpen = null; // {letter, panelEl, btn}
+
+/* create drawer panel for a letter (lazy) */
+function createPanel(letter){
+  const panel = document.createElement('div');
+  panel.className = 'drawer-panel';
+  panel.id = `drawer-${letter}`;
+  panel.setAttribute('role','region');
+  panel.setAttribute('aria-label', `${letter} files`);
+
+  // small arrow
+  const arrow = document.createElement('div');
+  arrow.className = 'drawer-arrow';
+  panel.appendChild(arrow);
+
+  // case card
+  const card = document.createElement('div');
+  card.className = 'case-card';
+  card.innerHTML = `
+    <div class="case-header">
+      <div>
+        <div class="case-title">Files — ${letter}</div>
+        <div class="case-sub">${DATA[letter].length} items</div>
+      </div>
+      <div style="font-family:Roboto Mono, monospace; color:var(--muted); font-size:13px">Index ${letter}</div>
+    </div>
+    <div class="folder-list" tabindex="0" role="list"></div>
+  `;
+  panel.appendChild(card);
+
+  // populate items
+  const list = card.querySelector('.folder-list');
+  DATA[letter].forEach((name, idx) => {
+    const a = document.createElement('a');
+    a.className = 'sub-item';
+    a.href = `#${letter}-${idx+1}`; // placeholder link
+    a.setAttribute('role','listitem');
+    a.setAttribute('tabindex','0');
+    a.innerHTML = `<div class="sub-meta">${letter} ${(idx+1).toString().padStart(3,'0')}</div><div class="sub-name">${name}</div>`;
+    list.appendChild(a);
+  });
+
+  drawerStage.appendChild(panel);
+  return panel;
+}
+
+/* position panel under a button visually */
+function positionPanelUnderButton(panel, button){
+  const wrapRect = document.getElementById('wrap').getBoundingClientRect();
+  const btnRect = button.getBoundingClientRect();
+  const stageRect = drawerStage.getBoundingClientRect();
+
+  // desired left: center panel under the button
+  const desiredLeft = btnRect.left - stageRect.left + (btnRect.width/2) - (panel.offsetWidth/2);
+  // clamp within stage
+  const left = Math.max(8, Math.min(desiredLeft, stageRect.width - panel.offsetWidth - 8));
+  panel.style.left = left + 'px';
+
+  // top should be a bit below the buttons row
+  const top = btnRect.bottom - stageRect.top + 8;
+  panel.style.top = top + 'px';
+
+  // arrow position relative to panel; center it under button
+  const arrow = panel.querySelector('.drawer-arrow');
+  const arrowLeft = btnRect.left - (stageRect.left + left) + (btnRect.width/2) - 8;
+  arrow.style.left = `${Math.max(12, Math.min(arrowLeft, panel.offsetWidth - 28))}px`;
+}
+
+/* open a given letter's panel; close previous */
+function openLetter(btn){
+  const letter = btn.dataset.letter;
+  // already open -> do nothing
+  if(currentOpen && currentOpen.letter === letter) return;
+
+  // close existing
+  if(currentOpen) closeCurrent();
+
+  // create or reuse
+  let panel = document.getElementById(`drawer-${letter}`);
+  if(!panel) panel = createPanel(letter);
+
+  // position & open
+  positionPanelUnderButton(panel, btn);
+  // small reflow to allow transition
+  requestAnimationFrame(()=> panel.classList.add('open'));
+
+  btn.setAttribute('aria-expanded','true');
+  currentOpen = { letter, panelEl: panel, btn };
+}
+
+/* close current open panel */
+function closeCurrent(){
+  if(!currentOpen) return;
+  const { panelEl, btn } = currentOpen;
+  panelEl.classList.remove('open');
+  // remove after animation to keep DOM light (optional)
+  setTimeout(()=> {
+    if(panelEl.parentNode) panelEl.parentNode.removeChild(panelEl);
+  }, 260);
+  if(btn) btn.setAttribute('aria-expanded','false');
+  currentOpen = null;
+}
+
+/* toggle for touch/click */
+function toggleLetter(btn){
+  const letter = btn.dataset.letter;
+  if(currentOpen && currentOpen.letter === letter){
+    closeCurrent();
+  } else {
+    openLetter(btn);
+  }
+}
+
+/* hookup behaviors for each button depending on device */
+document.querySelectorAll('.letter-btn').forEach(btn => {
+  if(isHoverCapable){
+    // desktop: open on hover, close on leave with small delay (Option A)
+    let leaveTimer = null;
+    btn.addEventListener('mouseenter', ()=> {
+      openLetter(btn);
+    });
+    btn.addEventListener('mouseleave', ()=> {
+      // close after short delay unless entering panel
+      leaveTimer = setTimeout(()=>{
+        // if panel is hovered, don't close
+        if(currentOpen && currentOpen.panelEl && currentOpen.panelEl.matches(':hover')) return;
+        closeCurrent();
+      }, 220);
+    });
+    // if panel hovered, cancel close while mouse is inside panel
+    drawerStage.addEventListener('mouseenter', (ev) => {
+      if(!currentOpen) return;
+      if(currentOpen.panelEl && currentOpen.panelEl.contains(ev.target)){
+        // cancel any pending close
+        clearTimeout(leaveTimer);
+      }
+    });
+    drawerStage.addEventListener('mouseleave', (ev) => {
+      if(!currentOpen) return;
+      // if leaving panel entirely, close it
+      setTimeout(()=> {
+        if(currentOpen && !currentOpen.btn.matches(':hover') && !(currentOpen.panelEl && currentOpen.panelEl.matches(':hover'))) {
+          closeCurrent();
+        }
+      }, 180);
+    });
+    // keyboard: Enter/Space opens
+    btn.addEventListener('keydown', (ev)=> {
+      if(ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault();
+        openLetter(btn);
+      } else if(ev.key === 'ArrowRight') {
+        // focus next
+        const all = Array.from(document.querySelectorAll('.letter-btn'));
+        const i = all.indexOf(btn);
+        all[(i+1) % all.length].focus();
+      } else if(ev.key === 'ArrowLeft') {
+        const all = Array.from(document.querySelectorAll('.letter-btn'));
+        const i = all.indexOf(btn);
+        all[(i-1 + all.length) % all.length].focus();
+      } else if(ev.key === 'Escape') {
+        closeCurrent();
+      }
+    });
+  } else {
+    // touch / tablet / mobile: click to toggle (option B)
+    btn.addEventListener('click', (e)=> {
+      e.preventDefault();
+      toggleLetter(btn);
+    });
+    // keyboard support same as above
+    btn.addEventListener('keydown', (ev)=> {
+      if(ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault();
+        toggleLetter(btn);
+      } else if(ev.key === 'ArrowRight') {
+        const all = Array.from(document.querySelectorAll('.letter-btn'));
+        const i = all.indexOf(btn);
+        all[(i+1) % all.length].focus();
+      } else if(ev.key === 'ArrowLeft') {
+        const all = Array.from(document.querySelectorAll('.letter-btn'));
+        const i = all.indexOf(btn);
+        all[(i-1 + all.length) % all.length].focus();
+      } else if(ev.key === 'Escape') {
+        closeCurrent();
+      }
+    });
+  }
+});
+
+/* click outside to close */
+document.addEventListener('click', (e)=> {
+  const isBtn = e.target.closest('.letter-btn');
+  const isPanel = currentOpen && currentOpen.panelEl && e.target.closest(`#${currentOpen.panelEl.id}`);
+  if(!isBtn && !isPanel) closeCurrent();
+});
+
+/* reposition panel on resize */
+window.addEventListener('resize', ()=> {
+  if(currentOpen) positionPanelUnderButton(currentOpen.panelEl, currentOpen.btn);
+});
+
+</script>
+</body>
+</html>
