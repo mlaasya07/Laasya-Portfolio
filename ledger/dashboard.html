@@ -66,8 +66,9 @@
     .wrap {
         max-width: 1100px;
         margin: 40px auto;
-        padding: 20px;
+        padding: 0;
     }
+
 
     h1 {
         font-size: 20px;
@@ -98,8 +99,25 @@
         background: var(--card);
         border-radius: 8px;
         overflow: hidden;
-        align-items: centre;
+        margin: 0 auto;
     }
+
+    table {
+        width: max-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .table-center {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    table {
+        width: max-content !important;
+    }
+
+
 
     th, td {
         padding: 12px 14px;
@@ -235,6 +253,13 @@
     .tab:hover { 
         background: #ffe989; color:#641200; }
 
+    .tab.active 
+    { 
+        background: #641200; 
+        color:#ffe989; 
+        border-bottom: 4px solid #641200; 
+    }
+
     
 </style>
 </head>
@@ -243,8 +268,9 @@
 
 <!-- Tabs -->
 <div class="tab-container">
-    <a href="dashboard.html" class="tab">Dashboard</a>
-    <a href="reserve.html" class="tab active">Reserve</a>
+    <a href="dashboard.html" class="tab active">Dashboard</a>
+    <a href="reserve.html" class="tab ">Reserve</a>
+    <a href="cipher.html" class="tab">Cipher</a>
 </div>
 
 <!-- PASSWORD LOCK -->
@@ -268,6 +294,7 @@
 
     <input type="text" id="searchBox" placeholder="Search anything (matches current view)...">
 
+<div class="table-center">
     <table id="ledgerTable" aria-live="polite">
         <thead>
         <tr>
@@ -289,14 +316,14 @@
             <!-- rendered rows -->
         </tbody>
     </table>
-
+</div>
     <footer>
         <p style="font-size:12px; color:var(--text); opacity:0.6;">
-            &copy; 2025 Ledger Dashboard | Made for Latte |
-            <a href="cipher.html" style="color:var(--text); text-decoration:none;">Cipher</a>
+            &copy; 2025 Ledger Dashboard | Made for Latte ♡
         </p>
     </footer>
 </div>
+
 
 <!-- Decode Modal -->
 <div id="decodeModal" role="dialog" aria-modal="true">

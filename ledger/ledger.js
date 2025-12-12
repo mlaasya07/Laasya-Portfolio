@@ -7,7 +7,7 @@ window.ledgerData = [
         due: "30/04/2025",
         margin: "50%",
         pl: "₹1,000",
-        status: "Paid",
+        status: "PAID",
         remarks: ["urgent", "delayed", "repeated checking needed"]
     },
     {
@@ -18,7 +18,7 @@ window.ledgerData = [
         due: "14/08/2025",
         margin: "25%",
         pl: "₹2,500",
-        status: "Paid",
+        status: "PAID",
         remarks: ["personal", "paid on time", "urgent"]
     },
     {
@@ -29,7 +29,7 @@ window.ledgerData = [
         due: "20/03/2025",
         margin: "0%",
         pl: "₹0",
-        status: "Paid",
+        status: "PAID",
         remarks: ["personal", "delayed", "ghosts", "urgent"]
     },
     {
@@ -40,7 +40,7 @@ window.ledgerData = [
         due: "-",
         margin: "100%",
         pl: "₹1500",
-        status: "Not Taken",
+        status: "NOT TAKEN",
         remarks: ["not taken yet"]
     }
 ];

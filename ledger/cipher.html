@@ -24,6 +24,37 @@
         -apple-system,'Segoe UI',
         Roboto,'Helvetica Neue',Arial
     }
+    
+
+        /*Tab changing styles*/
+    .tab-container {
+        display: flex;
+        border-bottom: 4px solid #641200;
+        gap: 10px;
+        padding: 0 10px;
+    }
+    .tab-container:hover {
+        border-bottom:4px solid #ffe989;
+    }
+
+    .tab {
+        padding: 12px 20px;
+        border-radius: 8px 8px 0 0;
+        color: var(--text);
+        text-decoration: none;
+    }
+
+    .tab:hover 
+    { 
+        background: #ffe989; color:#641200; 
+    }
+
+    .tab.active 
+    { 
+        background: #641200; 
+        color:#ffe989; 
+        border-bottom: 4px solid #641200; 
+    }
 
     .wrap
     {
@@ -203,6 +234,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Tabs -->
+  <div class="tab-container">
+      <a href="dashboard.html" class="tab">Dashboard</a>
+      <a href="reserve.html" class="tab">Reserve</a>
+      <a href="cipher.html" class="tab active">Cipher</a>
+  </div>
+
   <div class="wrap">
     <h1>Ledger Cipher — Encoder / Decoder</h1>
     <p class="lead">Paste or type a message and choose Encode or Decode using your custom substitution cipher (capital letters for names; lowercase letters for numbers). This tool preserves punctuation and spacing.</p>
