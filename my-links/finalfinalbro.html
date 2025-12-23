@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Web of Laasya</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<!-- external files -->
+<script src="colormap.js"></script>
+<script src="relation.js"></script>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #111;
+    font-family: "Roboto Mono", monospace;
+  }
+  .link {
+    opacity: 0.85;
+  }
+  text {
+    pointer-events: none;
+  }
+</style>
+</head>
+
+<body>
+<script>
+/* =========================
+   SVG SETUP
+========================= */
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select("body")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+const g = svg.append("g");
+
+/* =========================
+   FORCE SIMULATION
+========================= */
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links)
+    .id(d => d.id)
+    .distance(d => {
+      const s = d.source.id || d.source;
+      const t = d.target.id || d.target;
+      if (s === "Me" || t === "Me") {
+        return 200 + Math.random() * 30; // longer, slightly random
+      }
+      return 90;
+    })
+    .strength(1)
+  )
+  .force("charge", d3.forceManyBody()
+    .strength(d => d.kind === "category" ? -40 : -600)
+  )
+  .force("collision", d3.forceCollide(50))
+  .force("center", d3.forceCenter(width / 2, height / 2));
+
+/* =========================
+   PIN CATEGORIES + ME
+========================= */
+nodes.forEach((d, i) => {
+  if (d.kind === "category") {
+    d.fx = width - 160;
+    d.fy = 150 + i * 90;
+  }
+  if (d.id === "Me") {
+    d.fx = width / 2;
+    d.fy = height / 2;
+  }
+  if (d.kind === "person") {
+    d.fx = 160;                       // people stay on left
+    d.fy = null;                       // free to move vertically
+  }
+});
+
+//FORCE 
+simulation.force("forceX", d3.forceX(d => {
+  if (d.kind === "category") return width - 160;
+  if (d.id === "Me") return width / 2;
+  return 160; // people go left
+}).strength(0.5));
+
+nodes.forEach((d, i) => {
+  if (d.kind === "person") {
+    d.fx = 160;                    // left
+    d.fy = 100 + i * 80;           // stagger vertically
+  }
+});
+
+
+/* =========================
+   LINKS
+========================= */
+const link = g.selectAll(".link")
+  .data(links)
+  .enter()
+  .append("line")
+  .attr("class", "link")
+  .attr("stroke", d => colorMap[d.type] || "#888") // always use colormap
+  .attr("stroke-width", d =>
+    d.source.id === "Me" || d.target.id === "Me" ? 3 : 1.5
+  )
+  .attr("stroke-dasharray", d =>
+    d.source.id === "Me" || d.target.id === "Me" ? "0" : "5,4" // dotted for non-Me
+  );
+
+
+
+/* =========================
+   NODES
+========================= */
+const node = g.selectAll(".node")
+  .data(nodes)
+  .enter()
+  .append("g")
+  .call(d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended)
+  );
+
+node.append("rect")
+  .attr("x", -6)
+  .attr("y", -12)
+  .attr("rx", 4)
+  .attr("ry", 4)
+  .attr("width", d => d.id.length * 8 + 10)
+  .attr("height", 22)
+  .attr("fill", d => colorMap[d.status] || "#999");
+
+node.append("text")
+  .text(d => d.id)
+  .attr("y", 4)
+  .attr("fill", d => d.status === "dead" ? "#fff" : "#000")
+  .attr("font-size", 12);
+
+/* =========================
+   TICK
+========================= */
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+/* =========================
+   DRAG FUNCTIONS
+========================= */
+function dragstarted(event, d) {
+  if (!event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(event, d) {
+  d.fx = event.x;
+  d.fy = event.y;
+}
+
+function dragended(event, d) {
+  if (!event.active) simulation.alphaTarget(0);
+  if (d.kind !== "category" && d.id !== "Me") {
+    d.fx = null;
+    d.fy = null;
+  }
+}
+
+/* =========================
+   ZOOM
+========================= */
+svg.call(
+  d3.zoom()
+    .scaleExtent([0.3, 3])
+    .on("zoom", e => g.attr("transform", e.transform))
+);
+</script>
+</body>
+</html>
