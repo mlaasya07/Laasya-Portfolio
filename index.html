@@ -101,25 +101,49 @@
     text-align: center;
     padding: 2rem;
     font-size: 0.9rem;
-    color: #000 !important; /* Ensure footer text is always black */
+    color: #000;
     background: #f0f0f0;
   }
 
   footer a {
-  color: inherit !important; /* Make links inherit footer color */
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
   }
 
   footer a:hover {
     text-decoration: underline;
   }
 
-  footer a.no-underline:hover {
-    text-decoration: none !important;
+  .icon-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
   }
-  .icon-link { color: #0077ff; margin-right: 0.8rem; text-decoration: none; }
-  .icon-link i { margin-right: 0.3rem; }
-  .icon-link:hover { text-decoration: underline; }
+
+  .icon-link {
+    color: #bf0543;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+
+  .icon-link i,
+  .icon-link svg {
+    margin-right: 0.35rem;
+    color: #b32d59;
+    fill: #0077ff;
+  }
+
+  .icon-link:hover {
+    color: #f5427e !important;  
+  }
+  .icon-link:focus-visible {
+  outline: 2px solid #b32d59;
+  outline-offset: 3px;
+  }
+
 
   .game-card {
     background: #f9f9f9;
@@ -208,7 +232,7 @@
   body.dark nav a { color:#f5427e; }
   body.dark nav a:hover { color:#ff82ac; }
   body.dark footer { background:#1e1e1e !important; color:#ccc; }
-  body.dark .site-link, body.dark .icon-link { color:#f5427e; }
+  body.dark .site-link, body.dark .icon-link { color: #b32d59; } .icon-link i { color: #b32d59; } .icon-link.i:hover { color: #0077ff; }
   body.dark .game-card { background:#1e1e1e; border-color:#f5427e; }
   body.dark h1, body.dark h2, body.dark h3, body.dark p, body.dark ul, body.dark li { color:#f5427e!important; }
 
@@ -1098,20 +1122,19 @@ Birla Institute of Technology (BIT), Mesra, Ranchi </a></li>
     <p> - Carrier pigeons are welcome but must wear little hats.</p>
     <p> - I'm usually online, unless I’ve fallen into a creative coding rabbit hole again.</p>
     <p>
-    <p><a class="icon-link" href="mailto:mlaasy16@gmail.com" style = "color: #4db8ff"><i class="fas fa-envelope"></i> mlaasy16@gmail.com</a></p>
-    <p>
-      <a class="icon-link" href="https://github.com/mlaasya07" target="_blank" style = "color: #4db8ff" ><i class="fab fa-github"></i> GitHub</a> |
-      <a class="icon-link" href="https://linkedin.com/in/mlaasya07" target="_blank" style = "color: #4db8ff"><i class="fab fa-linkedin"></i> LinkedIn</a> |
-      <a class="icon-link" href="https://mlaasya07.substack.com" target="_blank" style="color: #4db8ff">
+    <p> | 
+      <a class="icon-link" href="mailto:mlaasy16@gmail.com" target="_blank"><i class="fas fa-envelope"></i>Email</a> | 
+      <a class="icon-link" href="https://github.com/mlaasya07" target="_blank" ><i class="fab fa-github"></i>GitHub</a> |
+      <a class="icon-link" href="https://linkedin.com/in/mlaasya07" target="_blank" ><i class="fab fa-linkedin"></i>LinkedIn</a> |
+      <a class="icon-link" href="https://medium.com/@mlaasya07" target="_blank"><i class="fab fa-medium"></i>Medium</a> |
+      <a class="icon-link" href="https://mlaasya07.substack.com" target="_blank"> 
       <svg width="16" height="16" viewBox="0 0 24 24" 
        style="margin-right: 4px; vertical-align: -2px;">
-        <rect width="24" height="24" rx="4" fill="#4db8ff"/>
+        <rect width="24" height="24" rx="4" fill="#b32d59"/>
         <rect x="4" y="7" width="16" height="2.2" fill="white"/>
         <rect x="4" y="11" width="16" height="2.2" fill="white"/>
         <rect x="4" y="15" width="16" height="2.2" fill="white"/>
-      </svg>
-      Substack
-      </a>
+      </svg>Substack</a>
     </p>
   </section>
 
